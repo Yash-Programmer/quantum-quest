@@ -9,11 +9,7 @@ class AddBudgetDialog extends ConsumerStatefulWidget {
   final Budget? budget; // If provided, we're editing
   final Function(Budget) onBudgetCreated;
 
-  const AddBudgetDialog({
-    Key? key,
-    this.budget,
-    required this.onBudgetCreated,
-  }) : super(key: key);
+  const AddBudgetDialog({super.key, this.budget, required this.onBudgetCreated});
 
   @override
   ConsumerState<AddBudgetDialog> createState() => _AddBudgetDialogState();
@@ -23,7 +19,7 @@ class _AddBudgetDialogState extends ConsumerState<AddBudgetDialog> {
   final _formKey = GlobalKey<FormState>();
   final _budgetAmountController = TextEditingController();
   final _alertThresholdController = TextEditingController();
-  
+
   BudgetCategory? _selectedCategory;
   BudgetPeriod _selectedPeriod = BudgetPeriod.monthly;
   bool _alertsEnabled = true;
@@ -33,7 +29,7 @@ class _AddBudgetDialogState extends ConsumerState<AddBudgetDialog> {
   @override
   void initState() {
     super.initState();
-    
+
     if (widget.budget != null) {
       // Editing mode
       final budget = widget.budget!;
@@ -43,7 +39,7 @@ class _AddBudgetDialogState extends ConsumerState<AddBudgetDialog> {
       _alertsEnabled = budget.alertsEnabled;
       _customStartDate = budget.startDate;
       _customEndDate = budget.endDate;
-      
+
       // Find the matching category
       WidgetsBinding.instance.addPostFrameCallback((_) {
         final categories = ref.read(budgetCategoriesProvider);
@@ -82,14 +78,13 @@ class _AddBudgetDialogState extends ConsumerState<AddBudgetDialog> {
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: AppTheme.primaryColor,
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(12),
+                ),
               ),
               child: Row(
                 children: [
-                  Icon(
-                    isEditing ? Icons.edit : Icons.add,
-                    color: Colors.white,
-                  ),
+                  Icon(isEditing ? Icons.edit : Icons.add, color: Colors.white),
                   const SizedBox(width: 12),
                   Text(
                     isEditing ? 'Edit Budget' : 'Create New Budget',
@@ -120,9 +115,8 @@ class _AddBudgetDialogState extends ConsumerState<AddBudgetDialog> {
                       // Category selection
                       Text(
                         'Category',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
                       DropdownButtonFormField<BudgetCategory>(
@@ -146,7 +140,11 @@ class _AddBudgetDialogState extends ConsumerState<AddBudgetDialog> {
                                 Icon(
                                   _getIconData(category.icon),
                                   size: 20,
-                                  color: Color(int.parse(category.color.replaceAll('#', '0xFF'))),
+                                  color: Color(
+                                    int.parse(
+                                      category.color.replaceAll('#', '0xFF'),
+                                    ),
+                                  ),
                                 ),
                                 const SizedBox(width: 8),
                                 Text(category.name),
@@ -154,20 +152,21 @@ class _AddBudgetDialogState extends ConsumerState<AddBudgetDialog> {
                             ),
                           );
                         }).toList(),
-                        onChanged: isEditing ? null : (value) {
-                          setState(() {
-                            _selectedCategory = value;
-                          });
-                        },
+                        onChanged: isEditing
+                            ? null
+                            : (value) {
+                                setState(() {
+                                  _selectedCategory = value;
+                                });
+                              },
                       ),
                       const SizedBox(height: 20),
 
                       // Budget amount
                       Text(
                         'Budget Amount',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
@@ -197,9 +196,8 @@ class _AddBudgetDialogState extends ConsumerState<AddBudgetDialog> {
                       // Period selection
                       Text(
                         'Budget Period',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
                       DropdownButtonFormField<BudgetPeriod>(
@@ -226,9 +224,8 @@ class _AddBudgetDialogState extends ConsumerState<AddBudgetDialog> {
                       if (_selectedPeriod == BudgetPeriod.custom) ...[
                         Text(
                           'Custom Date Range',
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 8),
                         Row(
@@ -287,13 +284,12 @@ class _AddBudgetDialogState extends ConsumerState<AddBudgetDialog> {
                           const SizedBox(width: 8),
                           Text(
                             'Enable Budget Alerts',
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
-                      
+
                       if (_alertsEnabled) ...[
                         const SizedBox(height: 12),
                         Text(
@@ -314,12 +310,15 @@ class _AddBudgetDialogState extends ConsumerState<AddBudgetDialog> {
                             FilteringTextInputFormatter.digitsOnly,
                           ],
                           validator: (value) {
-                            if (_alertsEnabled && (value == null || value.isEmpty)) {
+                            if (_alertsEnabled &&
+                                (value == null || value.isEmpty)) {
                               return 'Please enter alert threshold';
                             }
                             if (_alertsEnabled) {
                               final threshold = double.tryParse(value!);
-                              if (threshold == null || threshold < 1 || threshold > 100) {
+                              if (threshold == null ||
+                                  threshold < 1 ||
+                                  threshold > 100) {
                                 return 'Please enter a value between 1 and 100';
                               }
                             }
@@ -348,7 +347,9 @@ class _AddBudgetDialogState extends ConsumerState<AddBudgetDialog> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: _saveBudget,
-                      child: Text(isEditing ? 'Update Budget' : 'Create Budget'),
+                      child: Text(
+                        isEditing ? 'Update Budget' : 'Create Budget',
+                      ),
                     ),
                   ),
                 ],
@@ -377,7 +378,8 @@ class _AddBudgetDialogState extends ConsumerState<AddBudgetDialog> {
   Future<void> _selectEndDate() async {
     final date = await showDatePicker(
       context: context,
-      initialDate: _customEndDate ?? DateTime.now().add(const Duration(days: 30)),
+      initialDate:
+          _customEndDate ?? DateTime.now().add(const Duration(days: 30)),
       firstDate: _customStartDate ?? DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );
@@ -394,19 +396,19 @@ class _AddBudgetDialogState extends ConsumerState<AddBudgetDialog> {
     }
 
     if (_selectedCategory == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a category')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please select a category')));
       return;
     }
 
     final budgetAmount = double.parse(_budgetAmountController.text);
-    final alertThreshold = _alertsEnabled 
-        ? double.parse(_alertThresholdController.text) 
+    final alertThreshold = _alertsEnabled
+        ? double.parse(_alertThresholdController.text)
         : 80.0;
 
     DateTime startDate, endDate;
-    
+
     if (_selectedPeriod == BudgetPeriod.custom) {
       if (_customStartDate == null || _customEndDate == null) {
         ScaffoldMessenger.of(context).showSnackBar(

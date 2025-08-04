@@ -30,12 +30,12 @@ class Budget {
     required this.updatedAt,
   }) : remainingAmount = budgetAmount - spentAmount;
 
-  double get utilizationPercentage => 
+  double get utilizationPercentage =>
       budgetAmount > 0 ? (spentAmount / budgetAmount) * 100 : 0;
 
   bool get isOverBudget => spentAmount > budgetAmount;
 
-  bool get shouldAlert => 
+  bool get shouldAlert =>
       alertsEnabled && utilizationPercentage >= alertThreshold;
 
   Map<String, dynamic> toJson() {
@@ -107,13 +107,7 @@ class Budget {
   }
 }
 
-enum BudgetPeriod {
-  weekly,
-  monthly,
-  quarterly,
-  yearly,
-  custom,
-}
+enum BudgetPeriod { weekly, monthly, quarterly, yearly, custom }
 
 extension BudgetPeriodExtension on BudgetPeriod {
   String get displayName {
@@ -147,12 +141,7 @@ extension BudgetPeriodExtension on BudgetPeriod {
   }
 }
 
-enum BudgetStatus {
-  active,
-  paused,
-  completed,
-  overBudget,
-}
+enum BudgetStatus { active, paused, completed, overBudget }
 
 extension BudgetStatusExtension on BudgetStatus {
   String get displayName {

@@ -6,7 +6,7 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/router/app_router.dart';
 
 class OnboardingPage extends StatefulWidget {
-  const OnboardingPage({Key? key}) : super(key: key);
+  const OnboardingPage({super.key});
 
   @override
   State<OnboardingPage> createState() => _OnboardingPageState();
@@ -19,25 +19,29 @@ class _OnboardingPageState extends State<OnboardingPage> {
   final List<OnboardingData> _pages = [
     OnboardingData(
       title: 'Welcome to FinSight',
-      description: 'Your personal finance companion that helps you manage money, track expenses, and achieve your financial goals.',
+      description:
+          'Your personal finance companion that helps you manage money, track expenses, and achieve your financial goals.',
       image: Icons.account_balance,
       color: AppTheme.primaryColor,
     ),
     OnboardingData(
       title: 'Smart Budgeting',
-      description: 'Create intelligent budgets that adapt to your spending patterns and help you stay on track.',
+      description:
+          'Create intelligent budgets that adapt to your spending patterns and help you stay on track.',
       image: Icons.pie_chart,
       color: AppTheme.secondaryColor,
     ),
     OnboardingData(
       title: 'AI-Powered Insights',
-      description: 'Get personalized financial advice and predictions powered by artificial intelligence.',
+      description:
+          'Get personalized financial advice and predictions powered by artificial intelligence.',
       image: Icons.smart_toy,
       color: AppTheme.accentColor,
     ),
     OnboardingData(
       title: 'Achieve Your Goals',
-      description: 'Set financial goals and track your progress with our comprehensive planning tools.',
+      description:
+          'Set financial goals and track your progress with our comprehensive planning tools.',
       image: Icons.flag,
       color: AppTheme.successColor,
     ),
@@ -60,7 +64,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                 ),
               ),
             ),
-            
+
             // Page content
             Expanded(
               child: PageView.builder(
@@ -82,22 +86,19 @@ class _OnboardingPageState extends State<OnboardingPage> {
                           width: 150,
                           height: 150,
                           decoration: BoxDecoration(
-                            color: page.color.withOpacity(0.1),
+                            color: page.color.withValues(alpha: 0.1),
                             shape: BoxShape.circle,
                           ),
-                          child: Icon(
-                            page.image,
-                            size: 80,
-                            color: page.color,
-                          ),
+                          child: Icon(page.image, size: 80, color: page.color),
                         ),
                         const SizedBox(height: 48),
                         Text(
                           page.title,
-                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: page.color,
-                          ),
+                          style: Theme.of(context).textTheme.headlineMedium
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: page.color,
+                              ),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 24),
@@ -112,7 +113,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                 },
               ),
             ),
-            
+
             // Page indicators
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -123,17 +124,17 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   width: _currentPage == index ? 24 : 8,
                   height: 8,
                   decoration: BoxDecoration(
-                    color: _currentPage == index 
-                        ? AppTheme.primaryColor 
+                    color: _currentPage == index
+                        ? AppTheme.primaryColor
                         : Colors.grey.shade300,
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 32),
-            
+
             // Navigation buttons
             Padding(
               padding: const EdgeInsets.all(32),
@@ -163,7 +164,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
                               );
                             },
                       child: Text(
-                        _currentPage == _pages.length - 1 ? 'Get Started' : 'Next',
+                        _currentPage == _pages.length - 1
+                            ? 'Get Started'
+                            : 'Next',
                       ),
                     ),
                   ),
@@ -180,7 +183,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
     // Save onboarding completion status
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('has_completed_onboarding', true);
-    
+
     // Navigate to dashboard
     if (mounted) {
       context.go(AppRouter.dashboard);

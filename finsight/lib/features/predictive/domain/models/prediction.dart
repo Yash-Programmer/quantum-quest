@@ -159,12 +159,7 @@ class Prediction {
   }
 }
 
-enum PredictionStatus {
-  active,
-  completed,
-  outdated,
-  failed,
-}
+enum PredictionStatus { active, completed, outdated, failed }
 
 class DataPoint {
   final DateTime date;
@@ -238,12 +233,7 @@ class FinancialTrend {
   }
 }
 
-enum TrendDirection {
-  increasing,
-  decreasing,
-  stable,
-  volatile,
-}
+enum TrendDirection { increasing, decreasing, stable, volatile }
 
 extension TrendDirectionExtension on TrendDirection {
   String get displayName {
@@ -321,13 +311,7 @@ class PredictiveInsight {
   }
 }
 
-enum InsightType {
-  opportunity,
-  warning,
-  trend,
-  anomaly,
-  recommendation,
-}
+enum InsightType { opportunity, warning, trend, anomaly, recommendation }
 
 extension InsightTypeExtension on InsightType {
   String get displayName {

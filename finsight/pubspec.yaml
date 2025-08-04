@@ -49,6 +49,9 @@ dependencies:
   # Voice Input (optional)
   speech_to_text: ^6.6.0
   
+  # Markdown Support
+  flutter_markdown: ^0.6.18
+  
   # Image Handling
   image_picker: ^1.0.4
   

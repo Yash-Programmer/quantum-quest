@@ -5,10 +5,7 @@ import '../../domain/models/chat_models.dart';
 class ChatBubble extends StatelessWidget {
   final ChatMessage message;
 
-  const ChatBubble({
-    super.key,
-    required this.message,
-  });
+  const ChatBubble({super.key, required this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -23,21 +20,23 @@ class ChatBubble extends StatelessWidget {
         ),
         margin: const EdgeInsets.only(bottom: 8),
         child: Column(
-          crossAxisAlignment: isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          crossAxisAlignment: isUser
+              ? CrossAxisAlignment.end
+              : CrossAxisAlignment.start,
           children: [
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
-                color: isUser 
+                color: isUser
                     ? theme.colorScheme.primary
-                    : theme.colorScheme.surfaceVariant,
+                    : theme.colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(20).copyWith(
                   bottomRight: isUser ? const Radius.circular(4) : null,
                   bottomLeft: !isUser ? const Radius.circular(4) : null,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 5,
                     offset: const Offset(0, 2),
                   ),
@@ -95,7 +94,7 @@ class ChatBubble extends StatelessWidget {
     return SelectableText(
       message.content,
       style: theme.textTheme.bodyMedium?.copyWith(
-        color: isUser 
+        color: isUser
             ? theme.colorScheme.onPrimary
             : theme.colorScheme.onSurface,
         height: 1.4,
@@ -126,20 +125,14 @@ class ChatBubble extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: theme.colorScheme.outline.withOpacity(0.2),
-        ),
+        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(
-                Icons.pie_chart,
-                color: theme.colorScheme.primary,
-                size: 20,
-              ),
+              Icon(Icons.pie_chart, color: theme.colorScheme.primary, size: 20),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -156,7 +149,7 @@ class ChatBubble extends StatelessWidget {
             Text(
               attachment.description!,
               style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.7),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),
             ),
           ],
@@ -165,7 +158,7 @@ class ChatBubble extends StatelessWidget {
             height: 100,
             width: double.infinity,
             decoration: BoxDecoration(
-              color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+              color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Center(
@@ -197,9 +190,7 @@ class ChatBubble extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: theme.colorScheme.outline.withOpacity(0.2),
-        ),
+        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
@@ -211,11 +202,11 @@ class ChatBubble extends StatelessWidget {
           errorBuilder: (context, error, stackTrace) {
             return Container(
               height: 150,
-              color: theme.colorScheme.surfaceVariant,
+              color: theme.colorScheme.surfaceContainerHighest,
               child: Center(
                 child: Icon(
                   Icons.image_not_supported,
-                  color: theme.colorScheme.onSurface.withOpacity(0.5),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                 ),
               ),
             );
@@ -231,17 +222,11 @@ class ChatBubble extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: theme.colorScheme.outline.withOpacity(0.2),
-        ),
+        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [
-          Icon(
-            Icons.description,
-            color: theme.colorScheme.primary,
-            size: 24,
-          ),
+          Icon(Icons.description, color: theme.colorScheme.primary, size: 24),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -257,17 +242,13 @@ class ChatBubble extends StatelessWidget {
                   Text(
                     attachment.description!,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.7),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                     ),
                   ),
               ],
             ),
           ),
-          Icon(
-            Icons.download,
-            color: theme.colorScheme.primary,
-            size: 20,
-          ),
+          Icon(Icons.download, color: theme.colorScheme.primary, size: 20),
         ],
       ),
     );
@@ -279,17 +260,11 @@ class ChatBubble extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: theme.colorScheme.primary.withOpacity(0.3),
-        ),
+        border: Border.all(color: theme.colorScheme.primary.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
-          Icon(
-            Icons.link,
-            color: theme.colorScheme.primary,
-            size: 20,
-          ),
+          Icon(Icons.link, color: theme.colorScheme.primary, size: 20),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
@@ -300,11 +275,7 @@ class ChatBubble extends StatelessWidget {
               ),
             ),
           ),
-          Icon(
-            Icons.open_in_new,
-            color: theme.colorScheme.primary,
-            size: 16,
-          ),
+          Icon(Icons.open_in_new, color: theme.colorScheme.primary, size: 16),
         ],
       ),
     );
@@ -316,17 +287,11 @@ class ChatBubble extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: theme.colorScheme.outline.withOpacity(0.2),
-        ),
+        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [
-          Icon(
-            Icons.attachment,
-            color: theme.colorScheme.primary,
-            size: 20,
-          ),
+          Icon(Icons.attachment, color: theme.colorScheme.primary, size: 20),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
@@ -341,24 +306,18 @@ class ChatBubble extends StatelessWidget {
 
   Widget _buildMessageInfo(ThemeData theme, bool isUser) {
     return Padding(
-      padding: EdgeInsets.only(
-        left: isUser ? 0 : 8,
-        right: isUser ? 8 : 0,
-      ),
+      padding: EdgeInsets.only(left: isUser ? 0 : 8, right: isUser ? 8 : 0),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             DateFormat('HH:mm').format(message.timestamp),
             style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.5),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
               fontSize: 11,
             ),
           ),
-          if (isUser) ...[
-            const SizedBox(width: 4),
-            _buildStatusIcon(theme),
-          ],
+          if (isUser) ...[const SizedBox(width: 4), _buildStatusIcon(theme)],
         ],
       ),
     );
@@ -371,15 +330,15 @@ class ChatBubble extends StatelessWidget {
     switch (message.status) {
       case MessageStatus.sending:
         icon = Icons.access_time;
-        color = theme.colorScheme.onSurface.withOpacity(0.3);
+        color = theme.colorScheme.onSurface.withValues(alpha: 0.3);
         break;
       case MessageStatus.sent:
         icon = Icons.check;
-        color = theme.colorScheme.onSurface.withOpacity(0.5);
+        color = theme.colorScheme.onSurface.withValues(alpha: 0.5);
         break;
       case MessageStatus.delivered:
         icon = Icons.done_all;
-        color = theme.colorScheme.onSurface.withOpacity(0.5);
+        color = theme.colorScheme.onSurface.withValues(alpha: 0.5);
         break;
       case MessageStatus.read:
         icon = Icons.done_all;
@@ -391,10 +350,6 @@ class ChatBubble extends StatelessWidget {
         break;
     }
 
-    return Icon(
-      icon,
-      size: 12,
-      color: color,
-    );
+    return Icon(icon, size: 12, color: color);
   }
 }

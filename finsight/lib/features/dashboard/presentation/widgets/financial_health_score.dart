@@ -4,12 +4,12 @@ import 'package:fl_chart/fl_chart.dart';
 import '../../../../core/theme/app_theme.dart';
 
 class FinancialHealthScore extends StatelessWidget {
-  const FinancialHealthScore({Key? key}) : super(key: key);
+  const FinancialHealthScore({super.key});
 
   @override
   Widget build(BuildContext context) {
     const double score = 73.5; // Mock score - would come from provider
-    
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -17,9 +17,9 @@ class FinancialHealthScore extends StatelessWidget {
           children: [
             Text(
               'Financial Health Score',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
             SizedBox(
@@ -53,10 +53,11 @@ class FinancialHealthScore extends StatelessWidget {
                     children: [
                       Text(
                         '${score.toInt()}',
-                        style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: _getScoreColor(score),
-                        ),
+                        style: Theme.of(context).textTheme.headlineLarge
+                            ?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: _getScoreColor(score),
+                            ),
                       ),
                       Text(
                         'out of 100',
@@ -96,7 +97,7 @@ class FinancialHealthScore extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(16),
           ),
           child: Text(
@@ -109,13 +110,7 @@ class FinancialHealthScore extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 4),
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 12,
-            color: Colors.grey,
-          ),
-        ),
+        Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
       ],
     );
   }

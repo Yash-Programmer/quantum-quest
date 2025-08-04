@@ -5,10 +5,7 @@ import '../../domain/models/prediction.dart';
 class PredictionCard extends StatelessWidget {
   final Prediction prediction;
 
-  const PredictionCard({
-    super.key,
-    required this.prediction,
-  });
+  const PredictionCard({super.key, required this.prediction});
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +35,14 @@ class PredictionCard extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
-                    color: _getConfidenceColor(prediction.confidence).withOpacity(0.1),
+                    color: _getConfidenceColor(
+                      prediction.confidence,
+                    ).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                       color: _getConfidenceColor(prediction.confidence),
@@ -61,19 +63,15 @@ class PredictionCard extends StatelessWidget {
             Text(
               prediction.description,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.7),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),
             ),
             const SizedBox(height: 16),
             Row(
               children: [
-                Expanded(
-                  child: _buildPredictionValue(context),
-                ),
+                Expanded(child: _buildPredictionValue(context)),
                 const SizedBox(width: 16),
-                Expanded(
-                  child: _buildForecastDate(context),
-                ),
+                Expanded(child: _buildForecastDate(context)),
               ],
             ),
             const SizedBox(height: 12),
@@ -95,7 +93,7 @@ class PredictionCard extends StatelessWidget {
         Text(
           'Predicted Value',
           style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurface.withOpacity(0.6),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
           ),
         ),
         const SizedBox(height: 4),
@@ -108,8 +106,10 @@ class PredictionCard extends StatelessWidget {
             ),
             const SizedBox(width: 4),
             Text(
-              NumberFormat.currency(symbol: '\$', decimalDigits: 0)
-                  .format(prediction.predictedValue.abs()),
+              NumberFormat.currency(
+                symbol: '\$',
+                decimalDigits: 0,
+              ).format(prediction.predictedValue.abs()),
               style: theme.textTheme.titleMedium?.copyWith(
                 color: color,
                 fontWeight: FontWeight.bold,
@@ -130,7 +130,7 @@ class PredictionCard extends StatelessWidget {
         Text(
           'Forecast Date',
           style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurface.withOpacity(0.6),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
           ),
         ),
         const SizedBox(height: 4),
@@ -157,7 +157,7 @@ class PredictionCard extends StatelessWidget {
             Text(
               'Prediction Confidence',
               style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.6),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
               ),
             ),
             Text(
@@ -172,7 +172,7 @@ class PredictionCard extends StatelessWidget {
         const SizedBox(height: 8),
         LinearProgressIndicator(
           value: confidence,
-          backgroundColor: theme.colorScheme.surfaceVariant,
+          backgroundColor: theme.colorScheme.surfaceContainerHighest,
           valueColor: AlwaysStoppedAnimation<Color>(
             _getConfidenceColor(confidence),
           ),

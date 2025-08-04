@@ -8,10 +8,10 @@ class GeminiChatService {
   static const String _baseUrl = 'http://localhost:5000';
   static const String _messagesKey = 'gemini_chat_messages';
   static const String _contextKey = 'user_financial_context';
-  
+
   // Timeout for API calls
   static const Duration _timeout = Duration(seconds: 30);
-  
+
   // User's financial context for personalized responses
   Map<String, dynamic>? _userContext;
 
@@ -26,14 +26,14 @@ class GeminiChatService {
       final response = await http
           .get(Uri.parse('$_baseUrl/'))
           .timeout(const Duration(seconds: 5));
-      
+
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         return data['gemini_status'] == 'ready';
       }
       return false;
     } catch (e) {
-      print('Gemini service check failed: $e');
+      // Debug: 
       return false;
     }
   }
@@ -61,7 +61,7 @@ class GeminiChatService {
         'context': _userContext ?? {},
       };
 
-      print('Sending to Gemini: $requestData');
+      // Debug: 
 
       // Send to Gemini backend
       final response = await http
@@ -75,17 +75,19 @@ class GeminiChatService {
           )
           .timeout(_timeout);
 
-      print('Gemini response status: ${response.statusCode}');
-      print('Gemini response body: ${response.body}');
+      // Debug: 
+      // Debug: 
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        
+
         if (data['success'] == true) {
           // Create AI response message
           final aiMessage = ChatMessage(
             id: _generateMessageId(),
-            content: data['response'] ?? 'I apologize, but I couldn\'t generate a response.',
+            content:
+                data['response'] ??
+                'I apologize, but I couldn\'t generate a response.',
             type: MessageType.bot,
             timestamp: DateTime.now(),
             status: MessageStatus.delivered,
@@ -100,7 +102,7 @@ class GeminiChatService {
 
           // Save AI message
           await _saveMessage(aiMessage);
-          
+
           return aiMessage;
         } else {
           // Handle API error
@@ -110,7 +112,7 @@ class GeminiChatService {
         return _createErrorMessage('Failed to connect to AI service');
       }
     } catch (e) {
-      print('Error communicating with Gemini: $e');
+      // Debug: 
       return _createErrorMessage('Network error: ${e.toString()}');
     }
   }
@@ -136,7 +138,7 @@ class GeminiChatService {
 
     // Save context locally
     await _storage.setString(_contextKey, jsonEncode(_userContext));
-    print('Financial context updated: $_userContext');
+    // Debug: 
   }
 
   /// Get chat history
@@ -148,7 +150,7 @@ class GeminiChatService {
         return messagesJson.map((json) => ChatMessage.fromJson(json)).toList();
       }
     } catch (e) {
-      print('Error loading chat history: $e');
+      // Debug: 
     }
     return [];
   }
@@ -158,7 +160,7 @@ class GeminiChatService {
     try {
       await _storage.setString(_messagesKey, '[]');
     } catch (e) {
-      print('Error clearing chat history: $e');
+      // Debug: 
     }
   }
 
@@ -167,16 +169,16 @@ class GeminiChatService {
     try {
       final messages = await getChatHistory();
       messages.add(message);
-      
+
       // Keep only last 100 messages
       if (messages.length > 100) {
         messages.removeRange(0, messages.length - 100);
       }
-      
+
       final messagesJson = messages.map((m) => m.toJson()).toList();
       await _storage.setString(_messagesKey, jsonEncode(messagesJson));
     } catch (e) {
-      print('Error saving message: $e');
+      // Debug: 
     }
   }
 
@@ -186,10 +188,10 @@ class GeminiChatService {
       final contextString = await _storage.getString(_contextKey);
       if (contextString != null && contextString.isNotEmpty) {
         _userContext = jsonDecode(contextString);
-        print('Loaded financial context: $_userContext');
+        // Debug: 
       }
     } catch (e) {
-      print('Error loading financial context: $e');
+      // Debug: 
     }
   }
 
@@ -201,17 +203,19 @@ class GeminiChatService {
   /// Parse quick replies from API response
   List<QuickReply> _parseQuickReplies(dynamic quickReplies) {
     if (quickReplies == null) return [];
-    
+
     try {
       return (quickReplies as List)
-          .map((reply) => QuickReply(
-                id: _generateMessageId(),
-                text: reply.toString(),
-                icon: _getIconForQuickReply(reply.toString()),
-              ))
+          .map(
+            (reply) => QuickReply(
+              id: _generateMessageId(),
+              text: reply.toString(),
+              icon: _getIconForQuickReply(reply.toString()),
+            ),
+          )
           .toList();
     } catch (e) {
-      print('Error parsing quick replies: $e');
+      // Debug: 
       return [];
     }
   }
@@ -233,7 +237,8 @@ class GeminiChatService {
   ChatMessage _createErrorMessage(String error) {
     return ChatMessage(
       id: _generateMessageId(),
-      content: 'I\'m having trouble connecting to the AI service right now. Please check that the backend server is running and try again.\n\nError: $error',
+      content:
+          'I\'m having trouble connecting to the AI service right now. Please check that the backend server is running and try again.\n\nError: $error',
       type: MessageType.bot,
       timestamp: DateTime.now(),
       status: MessageStatus.failed,
@@ -242,10 +247,7 @@ class GeminiChatService {
         QuickReply(id: '1', text: 'Try again', icon: '🔄'),
         QuickReply(id: '2', text: 'Help', icon: '❓'),
       ],
-      metadata: {
-        'is_error': true,
-        'error_message': error,
-      },
+      metadata: {'is_error': true, 'error_message': error},
     );
   }
 
@@ -254,7 +256,8 @@ class GeminiChatService {
     final demoMessages = [
       ChatMessage(
         id: _generateMessageId(),
-        content: "Welcome to FinSight AI! 🤖✨\n\nI'm now powered by Google's Gemini AI to provide you with intelligent, personalized financial advice. I can help you with:\n\n💰 Budgeting strategies\n📈 Investment guidance\n🏦 Savings plans\n💳 Debt management\n🎯 Financial goal setting\n\nWhat would you like to explore first?",
+        content:
+            "Welcome to FinSight AI! 🤖✨\n\nI'm now powered by Google's Gemini AI to provide you with intelligent, personalized financial advice. I can help you with:\n\n💰 Budgeting strategies\n📈 Investment guidance\n🏦 Savings plans\n💳 Debt management\n🎯 Financial goal setting\n\nWhat would you like to explore first?",
         type: MessageType.bot,
         timestamp: DateTime.now().subtract(const Duration(minutes: 2)),
         status: MessageStatus.delivered,
@@ -279,7 +282,7 @@ class GeminiChatService {
       final response = await http
           .get(Uri.parse('$_baseUrl/test'))
           .timeout(const Duration(seconds: 10));
-      
+
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
@@ -289,10 +292,7 @@ class GeminiChatService {
         };
       }
     } catch (e) {
-      return {
-        'success': false,
-        'error': e.toString(),
-      };
+      return {'success': false, 'error': e.toString()};
     }
   }
 }

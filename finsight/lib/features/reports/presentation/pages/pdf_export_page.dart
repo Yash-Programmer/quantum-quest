@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../shared/widgets/placeholder_page.dart';
 
 class PDFExportPage extends StatelessWidget {
-  const PDFExportPage({Key? key}) : super(key: key);
+  const PDFExportPage({super.key});
 
   @override
   Widget build(BuildContext context) {

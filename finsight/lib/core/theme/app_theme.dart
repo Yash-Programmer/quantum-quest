@@ -8,17 +8,17 @@ class AppTheme {
   static const errorColor = Color(0xFFD32F2F); // Red
   static const successColor = Color(0xFF388E3C); // Success Green
   static const warningColor = Color(0xFFF57C00); // Warning Orange
-  
+
   // Neutral Colors
   static const backgroundColor = Color(0xFFF8F9FA);
   static const surfaceColor = Color(0xFFFFFFFF);
   static const cardColor = Color(0xFFFFFFFF);
-  
+
   // Text Colors
   static const textPrimary = Color(0xFF212121);
   static const textSecondary = Color(0xFF757575);
   static const textHint = Color(0xFFBDBDBD);
-  
+
   // Dark Theme Colors
   static const darkBackgroundColor = Color(0xFF121212);
   static const darkSurfaceColor = Color(0xFF1E1E1E);
@@ -35,14 +35,12 @@ class AppTheme {
       secondary: secondaryColor,
       tertiary: accentColor,
       error: errorColor,
-      background: backgroundColor,
       surface: surfaceColor,
       onPrimary: Colors.white,
       onSecondary: Colors.white,
-      onBackground: textPrimary,
       onSurface: textPrimary,
     ),
-    
+
     // AppBar Theme
     appBarTheme: const AppBarTheme(
       backgroundColor: primaryColor,
@@ -55,33 +53,26 @@ class AppTheme {
         color: Colors.white,
       ),
     ),
-    
+
     // Card Theme
     cardTheme: CardThemeData(
       color: cardColor,
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     ),
-    
+
     // Elevated Button Theme
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: primaryColor,
         foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        textStyle: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
       ),
     ),
-    
+
     // Text Theme
     textTheme: const TextTheme(
       headlineLarge: TextStyle(
@@ -125,7 +116,7 @@ class AppTheme {
         color: textHint,
       ),
     ),
-    
+
     // Input Decoration Theme
     inputDecorationTheme: InputDecorationTheme(
       border: OutlineInputBorder(
@@ -138,7 +129,7 @@ class AppTheme {
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
     ),
-    
+
     // Bottom Navigation Bar Theme
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: surfaceColor,
@@ -158,14 +149,12 @@ class AppTheme {
       secondary: secondaryColor,
       tertiary: accentColor,
       error: errorColor,
-      background: darkBackgroundColor,
       surface: darkSurfaceColor,
       onPrimary: Colors.white,
       onSecondary: Colors.white,
-      onBackground: darkTextPrimary,
       onSurface: darkTextPrimary,
     ),
-    
+
     // AppBar Theme
     appBarTheme: const AppBarTheme(
       backgroundColor: darkSurfaceColor,
@@ -178,33 +167,26 @@ class AppTheme {
         color: darkTextPrimary,
       ),
     ),
-    
+
     // Card Theme
     cardTheme: CardThemeData(
       color: darkCardColor,
       elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     ),
-    
+
     // Elevated Button Theme
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: primaryColor,
         foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        textStyle: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
       ),
     ),
-    
+
     // Text Theme
     textTheme: const TextTheme(
       headlineLarge: TextStyle(
@@ -248,7 +230,7 @@ class AppTheme {
         color: darkTextSecondary,
       ),
     ),
-    
+
     // Input Decoration Theme
     inputDecorationTheme: InputDecorationTheme(
       border: OutlineInputBorder(
@@ -261,7 +243,7 @@ class AppTheme {
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
     ),
-    
+
     // Bottom Navigation Bar Theme
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: darkSurfaceColor,

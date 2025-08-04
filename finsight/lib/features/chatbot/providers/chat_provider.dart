@@ -7,7 +7,9 @@ final chatbotServiceProvider = Provider<ChatbotService>((ref) {
   return ChatbotService();
 });
 
-final chatNotifierProvider = StateNotifierProvider<ChatNotifier, ChatState>((ref) {
+final chatNotifierProvider = StateNotifierProvider<ChatNotifier, ChatState>((
+  ref,
+) {
   final service = ref.watch(chatbotServiceProvider);
   return ChatNotifier(service);
 });
@@ -64,7 +66,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
     try {
       final messages = await _service.loadMessages();
       final sessions = await _service.loadSessions();
-      
+
       // Create default context
       final context = ChatContext(
         userId: 'user_${DateTime.now().millisecondsSinceEpoch}',
@@ -90,21 +92,19 @@ class ChatNotifier extends StateNotifier<ChatState> {
         isLoading: false,
       );
     } catch (e) {
-      state = state.copyWith(
-        error: e.toString(),
-        isLoading: false,
-      );
+      state = state.copyWith(error: e.toString(), isLoading: false);
     }
   }
 
   Future<ChatSession> _createNewSession() async {
     final sessionId = _generateId();
     final now = DateTime.now();
-    
+
     // Create welcome message
     final welcomeMessage = ChatMessage(
       id: _generateId(),
-      content: "Hi there! I'm your personal finance assistant. How can I help you manage your money better today? 💰",
+      content:
+          "Hi there! I'm your personal finance assistant. How can I help you manage your money better today? 💰",
       type: MessageType.bot,
       timestamp: now,
       quickReplies: [
@@ -121,12 +121,14 @@ class ChatNotifier extends StateNotifier<ChatState> {
       createdAt: now,
       lastMessageAt: now,
       messages: [welcomeMessage],
-      context: state.context ?? ChatContext(
-        userId: 'user_${DateTime.now().millisecondsSinceEpoch}',
-        userProfile: {},
-        recentTopics: [],
-        sessionData: {},
-      ),
+      context:
+          state.context ??
+          ChatContext(
+            userId: 'user_${DateTime.now().millisecondsSinceEpoch}',
+            userProfile: {},
+            recentTopics: [],
+            sessionData: {},
+          ),
     );
 
     return session;
@@ -156,7 +158,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
     try {
       // Generate bot response
       final response = await _service.generateResponse(content, state.context!);
-      
+
       // Create bot message
       final botMessage = ChatMessage(
         id: _generateId(),
@@ -171,10 +173,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
       // Add bot message to state
       final finalMessages = [...updatedMessages, botMessage];
-      state = state.copyWith(
-        messages: finalMessages,
-        isTyping: false,
-      );
+      state = state.copyWith(messages: finalMessages, isTyping: false);
 
       // Save updated messages
       await _service.saveMessages(finalMessages);
@@ -190,8 +189,9 @@ class ChatNotifier extends StateNotifier<ChatState> {
           context: state.currentSession!.context,
         );
 
-        final updatedSessions = state.sessions.map((s) => 
-          s.id == updatedSession.id ? updatedSession : s).toList();
+        final updatedSessions = state.sessions
+            .map((s) => s.id == updatedSession.id ? updatedSession : s)
+            .toList();
 
         state = state.copyWith(
           currentSession: updatedSession,
@@ -200,12 +200,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
         await _service.saveSessions(updatedSessions);
       }
-
     } catch (e) {
-      state = state.copyWith(
-        isTyping: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isTyping: false, error: e.toString());
     }
   }
 
@@ -228,14 +224,13 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
   Future<void> loadSession(String sessionId) async {
     final session = state.sessions.firstWhere((s) => s.id == sessionId);
-    state = state.copyWith(
-      currentSession: session,
-      messages: session.messages,
-    );
+    state = state.copyWith(currentSession: session, messages: session.messages);
   }
 
   Future<void> deleteSession(String sessionId) async {
-    final updatedSessions = state.sessions.where((s) => s.id != sessionId).toList();
+    final updatedSessions = state.sessions
+        .where((s) => s.id != sessionId)
+        .toList();
     state = state.copyWith(sessions: updatedSessions);
 
     if (state.currentSession?.id == sessionId) {
@@ -315,8 +310,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
   }
 
   String _generateId() {
-    return DateTime.now().millisecondsSinceEpoch.toString() + 
-           Random().nextInt(1000).toString();
+    return DateTime.now().millisecondsSinceEpoch.toString() +
+        Random().nextInt(1000).toString();
   }
 }
 

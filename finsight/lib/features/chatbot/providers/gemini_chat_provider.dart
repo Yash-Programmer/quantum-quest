@@ -4,15 +4,20 @@ import '../services/chatbot_service.dart';
 import '../services/gemini_chat_service.dart';
 
 // Providers
-final chatbotServiceProvider = Provider<ChatbotService>((ref) => ChatbotService());
-final geminiChatServiceProvider = Provider<GeminiChatService>((ref) => GeminiChatService());
+final chatbotServiceProvider = Provider<ChatbotService>(
+  (ref) => ChatbotService(),
+);
+final geminiChatServiceProvider = Provider<GeminiChatService>(
+  (ref) => GeminiChatService(),
+);
 
 // Enhanced chat provider that can use Gemini AI
-final geminiChatNotifierProvider = StateNotifierProvider<GeminiChatNotifier, GeminiChatState>((ref) {
-  final geminiService = ref.watch(geminiChatServiceProvider);
-  final localService = ref.watch(chatbotServiceProvider);
-  return GeminiChatNotifier(geminiService, localService);
-});
+final geminiChatNotifierProvider =
+    StateNotifierProvider<GeminiChatNotifier, GeminiChatState>((ref) {
+      final geminiService = ref.watch(geminiChatServiceProvider);
+      final localService = ref.watch(chatbotServiceProvider);
+      return GeminiChatNotifier(geminiService, localService);
+    });
 
 // Enhanced state for Gemini chat
 class GeminiChatState {
@@ -59,30 +64,31 @@ class GeminiChatNotifier extends StateNotifier<GeminiChatState> {
   final GeminiChatService _geminiService;
   final ChatbotService _localService;
 
-  GeminiChatNotifier(this._geminiService, this._localService) : super(const GeminiChatState()) {
+  GeminiChatNotifier(this._geminiService, this._localService)
+    : super(const GeminiChatState()) {
     _initialize();
   }
 
   /// Initialize the chat service
   Future<void> _initialize() async {
     state = state.copyWith(isLoading: true);
-    
+
     try {
       // Initialize Gemini service
       await _geminiService.initialize();
-      
+
       // Check if Gemini is available
       final isAvailable = await _geminiService.isAvailable();
-      print('Gemini availability: $isAvailable');
-      
+      // Debug:
+
       // Load existing messages
       final messages = await _geminiService.getChatHistory();
-      
+
       // Create demo conversation if no messages exist
       if (messages.isEmpty) {
         await _geminiService.createDemoConversation();
         final demoMessages = await _geminiService.getChatHistory();
-        
+
         state = state.copyWith(
           messages: demoMessages,
           isLoading: false,
@@ -95,9 +101,8 @@ class GeminiChatNotifier extends StateNotifier<GeminiChatState> {
           isGeminiAvailable: isAvailable,
         );
       }
-      
     } catch (e) {
-      print('Initialization error: $e');
+      // Debug:
       state = state.copyWith(
         isLoading: false,
         error: 'Failed to initialize: $e',
@@ -127,16 +132,16 @@ class GeminiChatNotifier extends StateNotifier<GeminiChatState> {
 
     try {
       ChatMessage response;
-      
+
       if (state.useGemini && state.isGeminiAvailable) {
-        print('Using Gemini AI for response');
+        // Debug:
         // Use Gemini AI
         response = await _geminiService.sendMessage(content);
       } else {
-        print('Using local chatbot for response');
+        // Debug:
         // Use local chatbot as fallback
         final botResponse = await _localService.generateResponse(
-          content, 
+          content,
           ChatContext(
             userId: 'default_user',
             userProfile: {},
@@ -150,9 +155,9 @@ class GeminiChatNotifier extends StateNotifier<GeminiChatState> {
               budgetCategories: {},
               financialGoals: [],
             ),
-          )
+          ),
         );
-        
+
         response = ChatMessage(
           id: _generateMessageId(),
           content: botResponse.text,
@@ -174,14 +179,10 @@ class GeminiChatNotifier extends StateNotifier<GeminiChatState> {
       // Add the response
       updatedMessages.add(response);
 
-      state = state.copyWith(
-        messages: updatedMessages,
-        isTyping: false,
-      );
-
+      state = state.copyWith(messages: updatedMessages, isTyping: false);
     } catch (e) {
-      print('Error sending message: $e');
-      
+      // Debug:
+
       // Update user message to failed
       final updatedMessages = state.messages.map((msg) {
         if (msg.id == userMessage.id) {
@@ -227,10 +228,10 @@ class GeminiChatNotifier extends StateNotifier<GeminiChatState> {
       };
 
       state = state.copyWith(financialContext: context);
-      
-      print('Financial context updated in provider');
+
+      // Debug:
     } catch (e) {
-      print('Error updating financial context: $e');
+      // Debug:
       state = state.copyWith(error: 'Failed to update context: $e');
     }
   }
@@ -246,7 +247,7 @@ class GeminiChatNotifier extends StateNotifier<GeminiChatState> {
       await _geminiService.clearChatHistory();
       state = state.copyWith(messages: []);
     } catch (e) {
-      print('Error clearing chat: $e');
+      // Debug:
       state = state.copyWith(error: 'Failed to clear chat: $e');
     }
   }
@@ -254,7 +255,7 @@ class GeminiChatNotifier extends StateNotifier<GeminiChatState> {
   /// Toggle between Gemini and local chatbot
   void toggleGeminiMode(bool useGemini) {
     state = state.copyWith(useGemini: useGemini);
-    print('Switched to ${useGemini ? 'Gemini AI' : 'Local'} mode');
+    // Debug: Switched to ${useGemini ? 'Gemini AI' : 'Local'} mode
   }
 
   /// Refresh Gemini availability
@@ -262,9 +263,9 @@ class GeminiChatNotifier extends StateNotifier<GeminiChatState> {
     try {
       final isAvailable = await _geminiService.isAvailable();
       state = state.copyWith(isGeminiAvailable: isAvailable);
-      print('Gemini status refreshed: $isAvailable');
+      // Debug:
     } catch (e) {
-      print('Error refreshing Gemini status: $e');
+      // Debug:
       state = state.copyWith(isGeminiAvailable: false);
     }
   }
@@ -274,20 +275,17 @@ class GeminiChatNotifier extends StateNotifier<GeminiChatState> {
     try {
       final result = await _geminiService.testConnection();
       if (result['success'] == true) {
-        state = state.copyWith(
-          isGeminiAvailable: true,
-          error: null,
-        );
-        print('Gemini connection test successful');
+        state = state.copyWith(isGeminiAvailable: true, error: null);
+        // Debug:
       } else {
         state = state.copyWith(
           isGeminiAvailable: false,
           error: 'Gemini test failed: ${result['error']}',
         );
-        print('Gemini connection test failed: ${result['error']}');
+        // Debug: Gemini connection test failed: ${result['error']}
       }
     } catch (e) {
-      print('Error testing Gemini connection: $e');
+      // Debug:
       state = state.copyWith(
         isGeminiAvailable: false,
         error: 'Connection test error: $e',

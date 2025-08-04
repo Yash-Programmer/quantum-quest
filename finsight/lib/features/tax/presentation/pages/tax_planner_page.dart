@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../shared/widgets/placeholder_page.dart';
 
 class TaxPlannerPage extends StatelessWidget {
-  const TaxPlannerPage({Key? key}) : super(key: key);
+  const TaxPlannerPage({super.key});
 
   @override
   Widget build(BuildContext context) {

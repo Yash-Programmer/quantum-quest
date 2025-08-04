@@ -11,7 +11,10 @@ class PredictiveAnalyticsService {
   // Save predictions to local storage
   Future<void> savePredictions(List<Prediction> predictions) async {
     final predictionsJson = predictions.map((p) => p.toJson()).toList();
-    await _storage.setStringList(_predictionsKey, predictionsJson.map(jsonEncode).toList());
+    await _storage.setStringList(
+      _predictionsKey,
+      predictionsJson.map(jsonEncode).toList(),
+    );
   }
 
   // Load predictions from local storage
@@ -23,7 +26,9 @@ class PredictiveAnalyticsService {
   }
 
   // Generate spending prediction using linear regression
-  Future<Prediction> generateSpendingPrediction(List<DataPoint> historicalData) async {
+  Future<Prediction> generateSpendingPrediction(
+    List<DataPoint> historicalData,
+  ) async {
     if (historicalData.isEmpty) {
       throw Exception('Insufficient data for prediction');
     }
@@ -35,7 +40,7 @@ class PredictiveAnalyticsService {
     final regression = _performLinearRegression(sortedData);
     final futureDate = DateTime.now().add(const Duration(days: 30));
     final predictedValue = _predictValue(regression, futureDate);
-    
+
     // Generate prediction data points
     final predictedData = <DataPoint>[];
     for (int i = 1; i <= 30; i++) {
@@ -51,7 +56,8 @@ class PredictiveAnalyticsService {
       id: _generateId(),
       type: PredictionType.spending,
       title: 'Monthly Spending Forecast',
-      description: 'Predicted spending for the next 30 days based on historical patterns',
+      description:
+          'Predicted spending for the next 30 days based on historical patterns',
       predictedValue: predictedValue,
       confidence: confidence,
       forecastDate: futureDate,
@@ -92,8 +98,10 @@ class PredictiveAnalyticsService {
       title: 'Quarterly Cash Flow Forecast',
       description: 'Predicted cash flow for the next 90 days',
       predictedValue: predictedCashFlow,
-      confidence: (_calculateConfidence(incomeData, incomeRegression) + 
-                  _calculateConfidence(expenseData, expenseRegression)) / 2,
+      confidence:
+          (_calculateConfidence(incomeData, incomeRegression) +
+              _calculateConfidence(expenseData, expenseRegression)) /
+          2,
       forecastDate: futureDate,
       forecastPeriod: const Duration(days: 90),
       historicalData: [...incomeData, ...expenseData],
@@ -195,7 +203,10 @@ class PredictiveAnalyticsService {
     return regression['slope']! * daysSinceEpoch + regression['intercept']!;
   }
 
-  double _calculateConfidence(List<DataPoint> data, Map<String, double> regression) {
+  double _calculateConfidence(
+    List<DataPoint> data,
+    Map<String, double> regression,
+  ) {
     if (data.length < 2) return 0.5;
 
     double totalSumSquares = 0;
@@ -205,7 +216,7 @@ class PredictiveAnalyticsService {
     for (int i = 0; i < data.length; i++) {
       final actual = data[i].value;
       final predicted = regression['slope']! * i + regression['intercept']!;
-      
+
       totalSumSquares += pow(actual - mean, 2);
       residualSumSquares += pow(actual - predicted, 2);
     }
@@ -239,30 +250,42 @@ class PredictiveAnalyticsService {
       direction: direction,
       changePercentage: changePercentage,
       significance: min(1.0, changePercentage.abs() / 100),
-      description: _generateTrendDescription(category, direction, changePercentage),
+      description: _generateTrendDescription(
+        category,
+        direction,
+        changePercentage,
+      ),
       factors: _identifyTrendFactors(direction, changePercentage),
     );
   }
 
   double _calculateVariance(List<DataPoint> data) {
     final mean = data.map((d) => d.value).reduce((a, b) => a + b) / data.length;
-    final variance = data
-        .map((d) => pow(d.value - mean, 2))
-        .reduce((a, b) => a + b) / data.length;
+    final variance =
+        data.map((d) => pow(d.value - mean, 2)).reduce((a, b) => a + b) /
+        data.length;
     return variance;
   }
 
-  Map<String, dynamic> _generateSpendingInsights(List<DataPoint> data, double predicted) {
-    final currentAverage = data.map((d) => d.value).reduce((a, b) => a + b) / data.length;
+  Map<String, dynamic> _generateSpendingInsights(
+    List<DataPoint> data,
+    double predicted,
+  ) {
+    final currentAverage =
+        data.map((d) => d.value).reduce((a, b) => a + b) / data.length;
     final change = ((predicted - currentAverage) / currentAverage) * 100;
 
     return {
       'currentAverage': currentAverage,
       'predictedChange': change,
-      'recommendation': change > 10 
+      'recommendation': change > 10
           ? 'Consider reviewing your budget to control spending'
           : 'Your spending is on track',
-      'riskLevel': change > 20 ? 'High' : change > 10 ? 'Medium' : 'Low',
+      'riskLevel': change > 20
+          ? 'High'
+          : change > 10
+          ? 'Medium'
+          : 'Low',
     };
   }
 
@@ -270,7 +293,7 @@ class PredictiveAnalyticsService {
     return {
       'predictedCashFlow': predictedCashFlow,
       'status': predictedCashFlow > 0 ? 'Positive' : 'Negative',
-      'recommendation': predictedCashFlow < 0 
+      'recommendation': predictedCashFlow < 0
           ? 'Consider reducing expenses or increasing income'
           : 'Your cash flow looks healthy',
       'urgency': predictedCashFlow < -500 ? 'High' : 'Low',
@@ -279,11 +302,14 @@ class PredictiveAnalyticsService {
 
   PredictiveInsight _generateSpendingInsight(Prediction prediction) {
     final change = prediction.insights['predictedChange'] as double;
-    
+
     return PredictiveInsight(
       id: _generateId(),
-      title: change > 0 ? 'Spending Increase Expected' : 'Spending Optimization Opportunity',
-      description: 'Based on your spending patterns, we predict a ${change.toStringAsFixed(1)}% change in spending',
+      title: change > 0
+          ? 'Spending Increase Expected'
+          : 'Spending Optimization Opportunity',
+      description:
+          'Based on your spending patterns, we predict a ${change.toStringAsFixed(1)}% change in spending',
       type: change > 15 ? InsightType.warning : InsightType.opportunity,
       impact: change.abs() / 100,
       recommendations: _getSpendingRecommendations(change),
@@ -296,7 +322,8 @@ class PredictiveAnalyticsService {
     return PredictiveInsight(
       id: _generateId(),
       title: 'Negative Cash Flow Alert',
-      description: 'Your predicted cash flow shows a deficit of \$${prediction.predictedValue.abs().toStringAsFixed(2)}',
+      description:
+          'Your predicted cash flow shows a deficit of \$${prediction.predictedValue.abs().toStringAsFixed(2)}',
       type: InsightType.warning,
       impact: 0.8,
       recommendations: [
@@ -347,7 +374,11 @@ class PredictiveAnalyticsService {
     }
   }
 
-  String _generateTrendDescription(String category, TrendDirection direction, double change) {
+  String _generateTrendDescription(
+    String category,
+    TrendDirection direction,
+    double change,
+  ) {
     switch (direction) {
       case TrendDirection.increasing:
         return '$category spending has increased by ${change.toStringAsFixed(1)}%';
@@ -387,11 +418,14 @@ class PredictiveAnalyticsService {
 
   Future<void> _saveTrends(List<FinancialTrend> trends) async {
     final trendsJson = trends.map((t) => t.toJson()).toList();
-    await _storage.setStringList(_trendsKey, trendsJson.map(jsonEncode).toList());
+    await _storage.setStringList(
+      _trendsKey,
+      trendsJson.map(jsonEncode).toList(),
+    );
   }
 
   String _generateId() {
-    return DateTime.now().millisecondsSinceEpoch.toString() + 
-           Random().nextInt(1000).toString();
+    return DateTime.now().millisecondsSinceEpoch.toString() +
+        Random().nextInt(1000).toString();
   }
 }

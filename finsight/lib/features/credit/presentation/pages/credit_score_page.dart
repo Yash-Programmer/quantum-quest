@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../shared/widgets/placeholder_page.dart';
 
 class CreditScorePage extends StatelessWidget {
-  const CreditScorePage({Key? key}) : super(key: key);
+  const CreditScorePage({super.key});
 
   @override
   Widget build(BuildContext context) {

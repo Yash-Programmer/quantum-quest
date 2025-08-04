@@ -5,7 +5,7 @@ import 'dart:convert';
 
 class BudgetNotifier extends StateNotifier<List<Budget>> {
   final LocalStorageService _localStorageService;
-  
+
   BudgetNotifier(this._localStorageService) : super([]) {
     _loadBudgets();
   }
@@ -15,7 +15,9 @@ class BudgetNotifier extends StateNotifier<List<Budget>> {
       final budgetsJson = await _localStorageService.getString('budgets');
       if (budgetsJson != null) {
         final List<dynamic> budgetsList = jsonDecode(budgetsJson);
-        final budgets = budgetsList.map((json) => Budget.fromJson(json)).toList();
+        final budgets = budgetsList
+            .map((json) => Budget.fromJson(json))
+            .toList();
         state = budgets;
       } else {
         // Load default budgets for first time users
@@ -35,7 +37,9 @@ class BudgetNotifier extends StateNotifier<List<Budget>> {
         categoryName: 'Food & Dining',
         budgetAmount: 8000,
         spentAmount: 5420,
-        startDate: DateTime.now().subtract(Duration(days: DateTime.now().day - 1)),
+        startDate: DateTime.now().subtract(
+          Duration(days: DateTime.now().day - 1),
+        ),
         endDate: DateTime.now().add(Duration(days: 30 - DateTime.now().day)),
         period: BudgetPeriod.monthly,
         status: BudgetStatus.active,
@@ -48,7 +52,9 @@ class BudgetNotifier extends StateNotifier<List<Budget>> {
         categoryName: 'Entertainment',
         budgetAmount: 3000,
         spentAmount: 2700,
-        startDate: DateTime.now().subtract(Duration(days: DateTime.now().day - 1)),
+        startDate: DateTime.now().subtract(
+          Duration(days: DateTime.now().day - 1),
+        ),
         endDate: DateTime.now().add(Duration(days: 30 - DateTime.now().day)),
         period: BudgetPeriod.monthly,
         status: BudgetStatus.active,
@@ -62,7 +68,9 @@ class BudgetNotifier extends StateNotifier<List<Budget>> {
         categoryName: 'Transportation',
         budgetAmount: 2500,
         spentAmount: 1200,
-        startDate: DateTime.now().subtract(Duration(days: DateTime.now().day - 1)),
+        startDate: DateTime.now().subtract(
+          Duration(days: DateTime.now().day - 1),
+        ),
         endDate: DateTime.now().add(Duration(days: 30 - DateTime.now().day)),
         period: BudgetPeriod.monthly,
         status: BudgetStatus.active,
@@ -76,7 +84,9 @@ class BudgetNotifier extends StateNotifier<List<Budget>> {
 
   Future<void> _saveBudgets() async {
     try {
-      final budgetsJson = jsonEncode(state.map((budget) => budget.toJson()).toList());
+      final budgetsJson = jsonEncode(
+        state.map((budget) => budget.toJson()).toList(),
+      );
       await _localStorageService.setString('budgets', budgetsJson);
     } catch (e) {
       // Handle error
@@ -100,14 +110,17 @@ class BudgetNotifier extends StateNotifier<List<Budget>> {
     await _saveBudgets();
   }
 
-  Future<void> updateSpentAmount(String categoryId, double newSpentAmount) async {
+  Future<void> updateSpentAmount(
+    String categoryId,
+    double newSpentAmount,
+  ) async {
     state = state.map((budget) {
       if (budget.categoryId == categoryId) {
         return budget.copyWith(
           spentAmount: newSpentAmount,
           updatedAt: DateTime.now(),
-          status: newSpentAmount > budget.budgetAmount 
-              ? BudgetStatus.overBudget 
+          status: newSpentAmount > budget.budgetAmount
+              ? BudgetStatus.overBudget
               : BudgetStatus.active,
         );
       }
@@ -117,7 +130,9 @@ class BudgetNotifier extends StateNotifier<List<Budget>> {
   }
 
   List<Budget> getBudgetsWithAlerts() {
-    return state.where((budget) => budget.shouldAlert || budget.isOverBudget).toList();
+    return state
+        .where((budget) => budget.shouldAlert || budget.isOverBudget)
+        .toList();
   }
 
   Budget? getBudgetByCategory(String categoryId) {
@@ -151,7 +166,9 @@ final localStorageServiceProvider = Provider<LocalStorageService>((ref) {
   return LocalStorageService();
 });
 
-final budgetProvider = StateNotifierProvider<BudgetNotifier, List<Budget>>((ref) {
+final budgetProvider = StateNotifierProvider<BudgetNotifier, List<Budget>>((
+  ref,
+) {
   final localStorageService = ref.watch(localStorageServiceProvider);
   return BudgetNotifier(localStorageService);
 });
@@ -227,15 +244,25 @@ final budgetCategoriesProvider = Provider<List<BudgetCategory>>((ref) {
 
 final budgetAlertsProvider = Provider<List<Budget>>((ref) {
   final budgets = ref.watch(budgetProvider);
-  return budgets.where((budget) => budget.shouldAlert || budget.isOverBudget).toList();
+  return budgets
+      .where((budget) => budget.shouldAlert || budget.isOverBudget)
+      .toList();
 });
 
 final budgetSummaryProvider = Provider<Map<String, double>>((ref) {
   final budgets = ref.watch(budgetProvider);
-  final totalBudget = budgets.fold(0.0, (sum, budget) => sum + budget.budgetAmount);
-  final totalSpent = budgets.fold(0.0, (sum, budget) => sum + budget.spentAmount);
+  final totalBudget = budgets.fold(
+    0.0,
+    (sum, budget) => sum + budget.budgetAmount,
+  );
+  final totalSpent = budgets.fold(
+    0.0,
+    (sum, budget) => sum + budget.spentAmount,
+  );
   final totalRemaining = totalBudget - totalSpent;
-  final utilizationPercentage = totalBudget > 0 ? (totalSpent / totalBudget) * 100 : 0.0;
+  final utilizationPercentage = totalBudget > 0
+      ? (totalSpent / totalBudget) * 100
+      : 0.0;
 
   return {
     'totalBudget': totalBudget,

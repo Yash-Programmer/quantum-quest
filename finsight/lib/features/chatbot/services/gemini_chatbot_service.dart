@@ -7,11 +7,11 @@ class GeminiChatbotService {
   final LocalStorageService _storage = LocalStorageService();
   static const String _messagesKey = 'chat_messages';
   static const String _contextKey = 'user_financial_context';
-  
+
   // Backend API configuration
   static const String _baseUrl = 'http://localhost:5000/api/chatbot';
   static const Duration _timeout = Duration(seconds: 30);
-  
+
   // User context for personalized responses
   Map<String, dynamic>? _userContext;
   String? _currentSessionId;
@@ -26,7 +26,7 @@ class GeminiChatbotService {
   Future<ChatMessage> sendMessage(String messageText, {String? userId}) async {
     try {
       userId ??= 'user_${DateTime.now().millisecondsSinceEpoch}';
-      
+
       // Create user message
       final userMessage = ChatMessage(
         id: _generateMessageId(),
@@ -61,7 +61,7 @@ class GeminiChatbotService {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        
+
         if (data['success'] == true) {
           // Update session ID if provided
           if (data['session_id'] != null) {
@@ -72,7 +72,9 @@ class GeminiChatbotService {
           // Create AI response message
           final aiMessage = ChatMessage(
             id: _generateMessageId(),
-            content: data['response'] ?? 'I apologize, but I couldn\'t generate a response.',
+            content:
+                data['response'] ??
+                'I apologize, but I couldn\'t generate a response.',
             type: MessageType.bot,
             timestamp: DateTime.now(),
             status: MessageStatus.delivered,
@@ -87,18 +89,23 @@ class GeminiChatbotService {
 
           // Save AI message locally
           await _saveMessage(aiMessage);
-          
+
           return aiMessage;
         } else {
           // Handle API error with fallback
-          return _createFallbackMessage(data['fallback_response'] ?? 'I encountered an error. Please try again.');
+          return _createFallbackMessage(
+            data['fallback_response'] ??
+                'I encountered an error. Please try again.',
+          );
         }
       } else {
         // Handle HTTP error
-        return _createFallbackMessage('Unable to connect to AI service. Please check your connection.');
+        return _createFallbackMessage(
+          'Unable to connect to AI service. Please check your connection.',
+        );
       }
     } catch (e) {
-      print('Error sending message to Gemini: $e');
+      // Debug: 
       // Return fallback response for any error
       return _createFallbackMessage(_getLocalFallbackResponse(messageText));
     }
@@ -128,16 +135,18 @@ class GeminiChatbotService {
 
     // Update backend
     try {
-      await http.post(
-        Uri.parse('$_baseUrl/context'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'user_id': 'current_user',
-          'context': _userContext,
-        }),
-      ).timeout(_timeout);
+      await http
+          .post(
+            Uri.parse('$_baseUrl/context'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'user_id': 'current_user',
+              'context': _userContext,
+            }),
+          )
+          .timeout(_timeout);
     } catch (e) {
-      print('Failed to update backend context: $e');
+      // Debug: 
       // Context is still saved locally, so it's not critical
     }
   }
@@ -156,7 +165,7 @@ class GeminiChatbotService {
         }
       }
     } catch (e) {
-      print('Error fetching suggestions: $e');
+      // Debug: 
     }
 
     // Fallback suggestions
@@ -186,7 +195,7 @@ class GeminiChatbotService {
         }
       }
     } catch (e) {
-      print('Error fetching history: $e');
+      // Debug: 
     }
 
     // Fallback to local storage
@@ -197,11 +206,11 @@ class GeminiChatbotService {
   Future<void> clearSession() async {
     if (_currentSessionId != null) {
       try {
-        await http.delete(
-          Uri.parse('$_baseUrl/session/$_currentSessionId'),
-        ).timeout(_timeout);
+        await http
+            .delete(Uri.parse('$_baseUrl/session/$_currentSessionId'))
+            .timeout(_timeout);
       } catch (e) {
-        print('Error clearing remote session: $e');
+        // Debug: 
       }
     }
 
@@ -223,7 +232,7 @@ class GeminiChatbotService {
         return data['gemini_available'] == true;
       }
     } catch (e) {
-      print('Error checking Gemini availability: $e');
+      // Debug: 
     }
     return false;
   }
@@ -237,7 +246,7 @@ class GeminiChatbotService {
         _userContext = jsonDecode(contextString);
       }
     } catch (e) {
-      print('Error loading user context: $e');
+      // Debug: 
     }
   }
 
@@ -249,16 +258,16 @@ class GeminiChatbotService {
     try {
       final messages = await _getLocalMessages();
       messages.add(message);
-      
+
       // Keep only last 100 messages locally
       if (messages.length > 100) {
         messages.removeRange(0, messages.length - 100);
       }
-      
+
       final messagesJson = messages.map((m) => m.toJson()).toList();
       await _storage.setString(_messagesKey, jsonEncode(messagesJson));
     } catch (e) {
-      print('Error saving message locally: $e');
+      // Debug: 
     }
   }
 
@@ -270,7 +279,7 @@ class GeminiChatbotService {
         return messagesJson.map((json) => ChatMessage.fromJson(json)).toList();
       }
     } catch (e) {
-      print('Error loading local messages: $e');
+      // Debug: 
     }
     return [];
   }
@@ -281,14 +290,16 @@ class GeminiChatbotService {
 
   List<QuickReply> _parseQuickReplies(dynamic quickReplies) {
     if (quickReplies == null) return [];
-    
+
     try {
       return (quickReplies as List)
-          .map((reply) => QuickReply(
-                id: _generateMessageId(),
-                text: reply.toString(),
-                icon: _getIconForQuickReply(reply.toString()),
-              ))
+          .map(
+            (reply) => QuickReply(
+              id: _generateMessageId(),
+              text: reply.toString(),
+              icon: _getIconForQuickReply(reply.toString()),
+            ),
+          )
           .toList();
     } catch (e) {
       return [];
@@ -312,13 +323,16 @@ class GeminiChatbotService {
         return ChatMessage(
           id: msg['id'] ?? _generateMessageId(),
           content: msg['user_message'] ?? msg['ai_response'] ?? '',
-          type: msg['user_message'] != null ? MessageType.user : MessageType.bot,
-          timestamp: DateTime.tryParse(msg['timestamp'] ?? '') ?? DateTime.now(),
+          type: msg['user_message'] != null
+              ? MessageType.user
+              : MessageType.bot,
+          timestamp:
+              DateTime.tryParse(msg['timestamp'] ?? '') ?? DateTime.now(),
           status: MessageStatus.delivered,
         );
       }).toList();
     } catch (e) {
-      print('Error parsing history: $e');
+      // Debug: 
       return [];
     }
   }
@@ -340,10 +354,11 @@ class GeminiChatbotService {
 
   String _getLocalFallbackResponse(String message) {
     final messageLower = message.toLowerCase();
-    
+
     if (messageLower.contains('budget')) {
       return "I'd be happy to help with budgeting! The 50/30/20 rule is a great starting point: 50% for needs, 30% for wants, and 20% for savings. Would you like specific budgeting tips?";
-    } else if (messageLower.contains('save') || messageLower.contains('saving')) {
+    } else if (messageLower.contains('save') ||
+        messageLower.contains('saving')) {
       return "Building savings is crucial! Start with an emergency fund goal of 3-6 months of expenses. Even small amounts like \$25-50 per month make a difference over time.";
     } else if (messageLower.contains('invest')) {
       return "For beginner investing, consider low-cost index funds or ETFs. They provide diversification and typically have lower fees. Start with what you can afford and think long-term!";
@@ -359,7 +374,8 @@ class GeminiChatbotService {
     final demoMessages = [
       ChatMessage(
         id: _generateMessageId(),
-        content: "Welcome to FinSight AI! 🌟 I'm your personal financial advisor, powered by advanced AI to help you make smart money decisions.",
+        content:
+            "Welcome to FinSight AI! 🌟 I'm your personal financial advisor, powered by advanced AI to help you make smart money decisions.",
         type: MessageType.bot,
         timestamp: DateTime.now().subtract(const Duration(minutes: 2)),
         status: MessageStatus.delivered,
@@ -371,7 +387,8 @@ class GeminiChatbotService {
       ),
       ChatMessage(
         id: _generateMessageId(),
-        content: "I can help you with budgeting, saving, investing, debt management, and achieving your financial goals. What would you like to explore first?",
+        content:
+            "I can help you with budgeting, saving, investing, debt management, and achieving your financial goals. What would you like to explore first?",
         type: MessageType.bot,
         timestamp: DateTime.now().subtract(const Duration(minutes: 1)),
         status: MessageStatus.delivered,

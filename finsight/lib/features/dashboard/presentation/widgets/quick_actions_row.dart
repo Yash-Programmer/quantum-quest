@@ -5,7 +5,7 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/router/app_router.dart';
 
 class QuickActionsRow extends StatelessWidget {
-  const QuickActionsRow({Key? key}) : super(key: key);
+  const QuickActionsRow({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +41,9 @@ class QuickActionsRow extends StatelessWidget {
       children: [
         Text(
           'Quick Actions',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
         SizedBox(
@@ -82,12 +82,9 @@ class QuickActionsRow extends StatelessWidget {
         width: 80,
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: color.withOpacity(0.3),
-            width: 1,
-          ),
+          border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -98,11 +95,7 @@ class QuickActionsRow extends StatelessWidget {
                 color: color,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(
-                icon,
-                color: Colors.white,
-                size: 24,
-              ),
+              child: Icon(icon, color: Colors.white, size: 24),
             ),
             const SizedBox(height: 8),
             Text(
@@ -138,13 +131,14 @@ class QuickActionsRow extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
-              decoration: const InputDecoration(
-                labelText: 'Category',
-              ),
+              decoration: const InputDecoration(labelText: 'Category'),
               items: const [
                 DropdownMenuItem(value: 'food', child: Text('Food')),
                 DropdownMenuItem(value: 'transport', child: Text('Transport')),
-                DropdownMenuItem(value: 'entertainment', child: Text('Entertainment')),
+                DropdownMenuItem(
+                  value: 'entertainment',
+                  child: Text('Entertainment'),
+                ),
                 DropdownMenuItem(value: 'shopping', child: Text('Shopping')),
                 DropdownMenuItem(value: 'bills', child: Text('Bills')),
                 DropdownMenuItem(value: 'other', child: Text('Other')),
@@ -171,7 +165,9 @@ class QuickActionsRow extends StatelessWidget {
               // Add transaction logic
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Transaction added successfully!')),
+                const SnackBar(
+                  content: Text('Transaction added successfully!'),
+                ),
               );
             },
             child: const Text('Add'),
@@ -186,7 +182,7 @@ class QuickActionsRow extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Quick Calculator'),
-        content: Container(
+        content: SizedBox(
           width: 300,
           height: 400,
           child: Column(
@@ -212,13 +208,31 @@ class QuickActionsRow extends StatelessWidget {
                   crossAxisCount: 4,
                   crossAxisSpacing: 8,
                   mainAxisSpacing: 8,
-                  children: [
-                    'C', '⌫', '%', '÷',
-                    '7', '8', '9', '×',
-                    '4', '5', '6', '-',
-                    '1', '2', '3', '+',
-                    '0', '0', '.', '=',
-                  ].map((text) => _buildCalculatorButton(context, text)).toList(),
+                  children:
+                      [
+                            'C',
+                            '⌫',
+                            '%',
+                            '÷',
+                            '7',
+                            '8',
+                            '9',
+                            '×',
+                            '4',
+                            '5',
+                            '6',
+                            '-',
+                            '1',
+                            '2',
+                            '3',
+                            '+',
+                            '0',
+                            '0',
+                            '.',
+                            '=',
+                          ]
+                          .map((text) => _buildCalculatorButton(context, text))
+                          .toList(),
                 ),
               ),
             ],
@@ -237,17 +251,17 @@ class QuickActionsRow extends StatelessWidget {
   Widget _buildCalculatorButton(BuildContext context, String text) {
     final isOperator = ['÷', '×', '-', '+', '='].contains(text);
     final isSpecial = ['C', '⌫', '%'].contains(text);
-    
+
     Color backgroundColor = Colors.grey.shade200;
     Color textColor = Colors.black;
-    
+
     if (isOperator) {
       backgroundColor = AppTheme.primaryColor;
       textColor = Colors.white;
     } else if (isSpecial) {
       backgroundColor = Colors.grey.shade300;
     }
-    
+
     return ElevatedButton(
       onPressed: () {
         // Calculator button logic
@@ -255,16 +269,11 @@ class QuickActionsRow extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: backgroundColor,
         foregroundColor: textColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
       child: Text(
         text,
-        style: const TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-        ),
+        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
       ),
     );
   }

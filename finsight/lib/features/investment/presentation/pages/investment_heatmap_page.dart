@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../shared/widgets/placeholder_page.dart';
 
 class InvestmentHeatmapPage extends StatelessWidget {
-  const InvestmentHeatmapPage({Key? key}) : super(key: key);
+  const InvestmentHeatmapPage({super.key});
 
   @override
   Widget build(BuildContext context) {

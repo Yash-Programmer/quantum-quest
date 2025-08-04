@@ -11,7 +11,7 @@ import '../widgets/add_budget_dialog.dart';
 import '../../../../core/theme/app_theme.dart';
 
 class SmartBudgetingPage extends ConsumerStatefulWidget {
-  const SmartBudgetingPage({Key? key}) : super(key: key);
+  const SmartBudgetingPage({super.key});
 
   @override
   ConsumerState<SmartBudgetingPage> createState() => _SmartBudgetingPageState();
@@ -108,18 +108,18 @@ class _SmartBudgetingPageState extends ConsumerState<SmartBudgetingPage>
             // Recent Budget Activity
             Text(
               'Budget Performance',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
+
             _buildBudgetPerformanceChart(budgets),
             const SizedBox(height: 24),
 
             // Top Categories
             _buildTopCategories(budgets),
-            
+
             const SizedBox(height: 50),
           ],
         ),
@@ -129,7 +129,9 @@ class _SmartBudgetingPageState extends ConsumerState<SmartBudgetingPage>
 
   Widget _buildCategoriesTab(List<Budget> budgets) {
     final filteredBudgets = budgets.where((budget) {
-      return budget.categoryName.toLowerCase().contains(_searchQuery.toLowerCase());
+      return budget.categoryName.toLowerCase().contains(
+        _searchQuery.toLowerCase(),
+      );
     }).toList();
 
     return Column(
@@ -235,7 +237,12 @@ class _SmartBudgetingPageState extends ConsumerState<SmartBudgetingPage>
     );
   }
 
-  Widget _buildStatCard(String title, String value, IconData icon, Color color) {
+  Widget _buildStatCard(
+    String title,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -278,7 +285,9 @@ class _SmartBudgetingPageState extends ConsumerState<SmartBudgetingPage>
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(budget.categoryName),
-                      Text('${budget.utilizationPercentage.toStringAsFixed(1)}%'),
+                      Text(
+                        '${budget.utilizationPercentage.toStringAsFixed(1)}%',
+                      ),
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -289,8 +298,8 @@ class _SmartBudgetingPageState extends ConsumerState<SmartBudgetingPage>
                       budget.isOverBudget
                           ? AppTheme.errorColor
                           : budget.utilizationPercentage > 80
-                              ? AppTheme.warningColor
-                              : AppTheme.successColor,
+                          ? AppTheme.warningColor
+                          : AppTheme.successColor,
                     ),
                   ),
                 ],
@@ -311,9 +320,9 @@ class _SmartBudgetingPageState extends ConsumerState<SmartBudgetingPage>
       children: [
         Text(
           'Top Spending Categories',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
         ...sortedBudgets.take(3).map((budget) {
@@ -343,7 +352,7 @@ class _SmartBudgetingPageState extends ConsumerState<SmartBudgetingPage>
               onTap: () => _showBudgetDetails(context, budget),
             ),
           );
-        }).toList(),
+        }),
       ],
     );
   }
@@ -361,16 +370,16 @@ class _SmartBudgetingPageState extends ConsumerState<SmartBudgetingPage>
           const SizedBox(height: 16),
           Text(
             'No budgets found',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              color: Colors.grey[600],
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(color: Colors.grey[600]),
           ),
           const SizedBox(height: 8),
           Text(
             'Create your first budget to start tracking your spending',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.grey[500],
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
@@ -405,9 +414,9 @@ class _SmartBudgetingPageState extends ConsumerState<SmartBudgetingPage>
           const SizedBox(height: 8),
           Text(
             'No budget alerts at the moment.\nKeep up the great spending habits!',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.grey[600],
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
             textAlign: TextAlign.center,
           ),
         ],
@@ -422,7 +431,9 @@ class _SmartBudgetingPageState extends ConsumerState<SmartBudgetingPage>
         onBudgetCreated: (budget) {
           ref.read(budgetProvider.notifier).addBudget(budget);
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Budget for ${budget.categoryName} created!')),
+            SnackBar(
+              content: Text('Budget for ${budget.categoryName} created!'),
+            ),
           );
         },
       ),
@@ -437,7 +448,11 @@ class _SmartBudgetingPageState extends ConsumerState<SmartBudgetingPage>
         onBudgetCreated: (updatedBudget) {
           ref.read(budgetProvider.notifier).updateBudget(updatedBudget);
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Budget for ${updatedBudget.categoryName} updated!')),
+            SnackBar(
+              content: Text(
+                'Budget for ${updatedBudget.categoryName} updated!',
+              ),
+            ),
           );
         },
       ),
@@ -539,8 +554,8 @@ class _SmartBudgetingPageState extends ConsumerState<SmartBudgetingPage>
                   currencyFormat.format(budget.remainingAmount),
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: budget.remainingAmount >= 0 
-                        ? AppTheme.successColor 
+                    color: budget.remainingAmount >= 0
+                        ? AppTheme.successColor
                         : AppTheme.errorColor,
                   ),
                 ),
@@ -554,8 +569,8 @@ class _SmartBudgetingPageState extends ConsumerState<SmartBudgetingPage>
                 budget.isOverBudget
                     ? AppTheme.errorColor
                     : budget.utilizationPercentage > 80
-                        ? AppTheme.warningColor
-                        : AppTheme.successColor,
+                    ? AppTheme.warningColor
+                    : AppTheme.successColor,
               ),
             ),
             const SizedBox(height: 8),
@@ -584,9 +599,9 @@ class _SmartBudgetingPageState extends ConsumerState<SmartBudgetingPage>
             onPressed: () {
               ref.read(budgetProvider.notifier).deleteBudget(budgetId);
               Navigator.of(context).pop();
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Budget deleted!')),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const SnackBar(content: Text('Budget deleted!')));
             },
             child: const Text('Delete'),
           ),

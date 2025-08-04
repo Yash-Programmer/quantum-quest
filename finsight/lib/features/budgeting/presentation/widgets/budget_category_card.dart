@@ -10,12 +10,12 @@ class BudgetCategoryCard extends StatelessWidget {
   final VoidCallback? onDelete;
 
   const BudgetCategoryCard({
-    Key? key,
+    super.key,
     required this.budget,
     this.onTap,
     this.onEdit,
     this.onDelete,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,7 @@ class BudgetCategoryCard extends StatelessWidget {
                           width: 40,
                           height: 40,
                           decoration: BoxDecoration(
-                            color: _getCategoryColor().withOpacity(0.1),
+                            color: _getCategoryColor().withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Icon(
@@ -62,15 +62,13 @@ class BudgetCategoryCard extends StatelessWidget {
                             children: [
                               Text(
                                 budget.categoryName,
-                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: Theme.of(context).textTheme.titleMedium
+                                    ?.copyWith(fontWeight: FontWeight.bold),
                               ),
                               Text(
                                 budget.period.displayName,
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: Colors.grey[600],
-                                ),
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(color: Colors.grey[600]),
                               ),
                             ],
                           ),
@@ -85,8 +83,8 @@ class BudgetCategoryCard extends StatelessWidget {
                       if (budget.shouldAlert || budget.isOverBudget)
                         Icon(
                           Icons.warning,
-                          color: budget.isOverBudget 
-                              ? AppTheme.errorColor 
+                          color: budget.isOverBudget
+                              ? AppTheme.errorColor
                               : AppTheme.warningColor,
                           size: 20,
                         ),
@@ -145,10 +143,13 @@ class BudgetCategoryCard extends StatelessWidget {
                       ),
                       Text(
                         currencyFormat.format(budget.spentAmount),
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: budget.isOverBudget ? AppTheme.errorColor : null,
-                        ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: budget.isOverBudget
+                                  ? AppTheme.errorColor
+                                  : null,
+                            ),
                       ),
                     ],
                   ),
@@ -163,9 +164,8 @@ class BudgetCategoryCard extends StatelessWidget {
                       ),
                       Text(
                         currencyFormat.format(budget.budgetAmount),
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -187,8 +187,8 @@ class BudgetCategoryCard extends StatelessWidget {
                       Text(
                         currencyFormat.format(budget.remainingAmount),
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: budget.remainingAmount >= 0 
-                              ? AppTheme.successColor 
+                          color: budget.remainingAmount >= 0
+                              ? AppTheme.successColor
                               : AppTheme.errorColor,
                         ),
                       ),
@@ -202,8 +202,8 @@ class BudgetCategoryCard extends StatelessWidget {
                       budget.isOverBudget
                           ? AppTheme.errorColor
                           : budget.utilizationPercentage > 80
-                              ? AppTheme.warningColor
-                              : AppTheme.successColor,
+                          ? AppTheme.warningColor
+                          : AppTheme.successColor,
                     ),
                   ),
                 ],
@@ -219,7 +219,7 @@ class BudgetCategoryCard extends StatelessWidget {
                       budget.status.displayName,
                       style: const TextStyle(fontSize: 12),
                     ),
-                    backgroundColor: _getStatusColor().withOpacity(0.1),
+                    backgroundColor: _getStatusColor().withValues(alpha: 0.1),
                     side: BorderSide(color: _getStatusColor()),
                   ),
                   if (budget.alertsEnabled)

@@ -20,10 +20,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
       vsync: this,
     );
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeInOut,
-      ),
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
     _animationController.repeat();
   }
@@ -48,13 +45,13 @@ class _TypingIndicatorState extends State<TypingIndicator>
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceVariant,
-            borderRadius: BorderRadius.circular(20).copyWith(
-              bottomLeft: const Radius.circular(4),
-            ),
+            color: theme.colorScheme.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(
+              20,
+            ).copyWith(bottomLeft: const Radius.circular(4)),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 5,
                 offset: const Offset(0, 2),
               ),
@@ -92,7 +89,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
                   Text(
                     'Typing',
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.6),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                       fontStyle: FontStyle.italic,
                     ),
                   ),
@@ -124,13 +121,13 @@ class _TypingIndicatorState extends State<TypingIndicator>
   Widget _buildDot(int index, ThemeData theme) {
     const dotDelay = 0.2;
     final delay = index * dotDelay;
-    
+
     return AnimatedBuilder(
       animation: _animation,
       builder: (context, child) {
         final progress = (_animation.value - delay).clamp(0.0, 1.0);
         final opacity = (progress * 2).clamp(0.0, 1.0);
-        final scale = progress < 0.5 
+        final scale = progress < 0.5
             ? (progress * 2).clamp(0.5, 1.0)
             : (2.0 - progress * 2).clamp(0.5, 1.0);
 
@@ -140,7 +137,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
             width: 4,
             height: 4,
             decoration: BoxDecoration(
-              color: theme.colorScheme.primary.withOpacity(opacity),
+              color: theme.colorScheme.primary.withValues(alpha: opacity),
               shape: BoxShape.circle,
             ),
           ),

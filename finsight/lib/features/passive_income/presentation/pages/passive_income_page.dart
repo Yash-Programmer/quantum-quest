@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../shared/widgets/placeholder_page.dart';
 
 class PassiveIncomePage extends StatelessWidget {
-  const PassiveIncomePage({Key? key}) : super(key: key);
+  const PassiveIncomePage({super.key});
 
   @override
   Widget build(BuildContext context) {

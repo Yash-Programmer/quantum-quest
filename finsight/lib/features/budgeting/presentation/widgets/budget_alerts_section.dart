@@ -6,10 +6,7 @@ import '../../../../core/theme/app_theme.dart';
 class BudgetAlertsSection extends StatelessWidget {
   final List<Budget> alertBudgets;
 
-  const BudgetAlertsSection({
-    Key? key,
-    required this.alertBudgets,
-  }) : super(key: key);
+  const BudgetAlertsSection({super.key, required this.alertBudgets});
 
   @override
   Widget build(BuildContext context) {
@@ -20,19 +17,19 @@ class BudgetAlertsSection extends StatelessWidget {
         children: [
           Text(
             '⚠️ Budget Alerts (${alertBudgets.length})',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Text(
             'These budgets need your attention',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.grey[600],
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
           ),
           const SizedBox(height: 16),
-          
+
           ...alertBudgets.map((budget) => _buildAlertCard(context, budget)),
         ],
       ),
@@ -47,7 +44,9 @@ class BudgetAlertsSection extends StatelessWidget {
     );
 
     final isOverBudget = budget.isOverBudget;
-    final alertColor = isOverBudget ? AppTheme.errorColor : AppTheme.warningColor;
+    final alertColor = isOverBudget
+        ? AppTheme.errorColor
+        : AppTheme.warningColor;
     final alertIcon = isOverBudget ? Icons.error : Icons.warning;
     final alertTitle = isOverBudget ? 'Over Budget' : 'Budget Alert';
 
@@ -56,10 +55,7 @@ class BudgetAlertsSection extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: alertColor.withOpacity(0.3),
-            width: 2,
-          ),
+          border: Border.all(color: alertColor.withValues(alpha: 0.3), width: 2),
         ),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -72,14 +68,10 @@ class BudgetAlertsSection extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: alertColor.withOpacity(0.1),
+                      color: alertColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Icon(
-                      alertIcon,
-                      color: alertColor,
-                      size: 20,
-                    ),
+                    child: Icon(alertIcon, color: alertColor, size: 20),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -96,9 +88,8 @@ class BudgetAlertsSection extends StatelessWidget {
                         ),
                         Text(
                           budget.categoryName,
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.w600),
                         ),
                       ],
                     ),
@@ -157,8 +148,8 @@ class BudgetAlertsSection extends StatelessWidget {
                           currencyFormat.format(budget.remainingAmount),
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
-                            color: budget.remainingAmount >= 0 
-                                ? AppTheme.successColor 
+                            color: budget.remainingAmount >= 0
+                                ? AppTheme.successColor
                                 : AppTheme.errorColor,
                           ),
                         ),
@@ -181,24 +172,17 @@ class BudgetAlertsSection extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: alertColor.withOpacity(0.1),
+                  color: alertColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
                   children: [
-                    Icon(
-                      Icons.lightbulb_outline,
-                      color: alertColor,
-                      size: 20,
-                    ),
+                    Icon(Icons.lightbulb_outline, color: alertColor, size: 20),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         _getAlertMessage(budget),
-                        style: TextStyle(
-                          color: alertColor,
-                          fontSize: 14,
-                        ),
+                        style: TextStyle(color: alertColor, fontSize: 14),
                       ),
                     ),
                   ],
@@ -293,10 +277,26 @@ class BudgetAlertsSection extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     children: [
                       // Mock transaction data
-                      _buildTransactionItem('Coffee at Starbucks', '₹450', '2 hours ago'),
-                      _buildTransactionItem('Lunch at McDonald\'s', '₹320', 'Yesterday'),
-                      _buildTransactionItem('Grocery shopping', '₹1,200', '2 days ago'),
-                      _buildTransactionItem('Movie tickets', '₹600', '3 days ago'),
+                      _buildTransactionItem(
+                        'Coffee at Starbucks',
+                        '₹450',
+                        '2 hours ago',
+                      ),
+                      _buildTransactionItem(
+                        'Lunch at McDonald\'s',
+                        '₹320',
+                        'Yesterday',
+                      ),
+                      _buildTransactionItem(
+                        'Grocery shopping',
+                        '₹1,200',
+                        '2 days ago',
+                      ),
+                      _buildTransactionItem(
+                        'Movie tickets',
+                        '₹600',
+                        '3 days ago',
+                      ),
                       const SizedBox(height: 20),
                     ],
                   ),
@@ -312,7 +312,7 @@ class BudgetAlertsSection extends StatelessWidget {
   Widget _buildTransactionItem(String title, String amount, String time) {
     return ListTile(
       leading: CircleAvatar(
-        backgroundColor: AppTheme.primaryColor.withOpacity(0.1),
+        backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.1),
         child: Icon(
           Icons.shopping_cart,
           color: AppTheme.primaryColor,
@@ -323,10 +323,7 @@ class BudgetAlertsSection extends StatelessWidget {
       subtitle: Text(time),
       trailing: Text(
         amount,
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 16,
-        ),
+        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
       ),
     );
   }

@@ -73,7 +73,10 @@ class ChatbotService {
   // Save chat messages
   Future<void> saveMessages(List<ChatMessage> messages) async {
     final messagesJson = messages.map((m) => m.toJson()).toList();
-    await _storage.setStringList(_messagesKey, messagesJson.map(jsonEncode).toList());
+    await _storage.setStringList(
+      _messagesKey,
+      messagesJson.map(jsonEncode).toList(),
+    );
   }
 
   // Load chat messages
@@ -87,7 +90,10 @@ class ChatbotService {
   // Save chat sessions
   Future<void> saveSessions(List<ChatSession> sessions) async {
     final sessionsJson = sessions.map((s) => s.toJson()).toList();
-    await _storage.setStringList(_sessionsKey, sessionsJson.map(jsonEncode).toList());
+    await _storage.setStringList(
+      _sessionsKey,
+      sessionsJson.map(jsonEncode).toList(),
+    );
   }
 
   // Load chat sessions
@@ -99,13 +105,16 @@ class ChatbotService {
   }
 
   // Generate bot response
-  Future<BotResponse> generateResponse(String userMessage, ChatContext context) async {
+  Future<BotResponse> generateResponse(
+    String userMessage,
+    ChatContext context,
+  ) async {
     // Simulate thinking delay
     await Future.delayed(const Duration(milliseconds: 800));
 
     // Analyze user intent
     final intent = _analyzeIntent(userMessage);
-    
+
     // Generate contextual response
     String responseText;
     List<QuickReply>? quickReplies;
@@ -152,21 +161,24 @@ class ChatbotService {
     final entities = <String, dynamic>{};
 
     // Greeting patterns
-    if (_containsAny(lowercaseMessage, ['hello', 'hi', 'hey', 'good morning', 'good afternoon'])) {
-      return BotIntent(
-        name: 'greeting',
-        confidence: 0.95,
-        entities: entities,
-      );
+    if (_containsAny(lowercaseMessage, [
+      'hello',
+      'hi',
+      'hey',
+      'good morning',
+      'good afternoon',
+    ])) {
+      return BotIntent(name: 'greeting', confidence: 0.95, entities: entities);
     }
 
     // Help patterns
-    if (_containsAny(lowercaseMessage, ['help', 'what can you do', 'commands', 'options'])) {
-      return BotIntent(
-        name: 'help',
-        confidence: 0.90,
-        entities: entities,
-      );
+    if (_containsAny(lowercaseMessage, [
+      'help',
+      'what can you do',
+      'commands',
+      'options',
+    ])) {
+      return BotIntent(name: 'help', confidence: 0.90, entities: entities);
     }
 
     // Financial categories
@@ -182,7 +194,12 @@ class ChatbotService {
     }
 
     // Spending analysis
-    if (_containsAny(lowercaseMessage, ['spending', 'expenses', 'where is my money', 'analyze'])) {
+    if (_containsAny(lowercaseMessage, [
+      'spending',
+      'expenses',
+      'where is my money',
+      'analyze',
+    ])) {
       return BotIntent(
         name: 'spending_analysis',
         confidence: 0.80,
@@ -191,7 +208,12 @@ class ChatbotService {
     }
 
     // Budget help
-    if (_containsAny(lowercaseMessage, ['budget', 'budgeting', 'plan', 'allocate'])) {
+    if (_containsAny(lowercaseMessage, [
+      'budget',
+      'budgeting',
+      'plan',
+      'allocate',
+    ])) {
       return BotIntent(
         name: 'budget_help',
         confidence: 0.85,
@@ -200,7 +222,12 @@ class ChatbotService {
     }
 
     // Goal setting
-    if (_containsAny(lowercaseMessage, ['goal', 'target', 'save for', 'plan for'])) {
+    if (_containsAny(lowercaseMessage, [
+      'goal',
+      'target',
+      'save for',
+      'plan for',
+    ])) {
       return BotIntent(
         name: 'goal_setting',
         confidence: 0.80,
@@ -209,11 +236,7 @@ class ChatbotService {
     }
 
     // Default intent
-    return BotIntent(
-      name: 'general',
-      confidence: 0.50,
-      entities: entities,
-    );
+    return BotIntent(name: 'general', confidence: 0.50, entities: entities);
   }
 
   List<String> _getCategoryKeywords(String category) {
@@ -223,7 +246,14 @@ class ChatbotService {
       case 'saving':
         return ['save', 'saving', 'savings', 'emergency fund', 'rainy day'];
       case 'investing':
-        return ['invest', 'investing', 'investment', 'stocks', 'portfolio', 'returns'];
+        return [
+          'invest',
+          'investing',
+          'investment',
+          'stocks',
+          'portfolio',
+          'returns',
+        ];
       case 'debt':
         return ['debt', 'loan', 'credit card', 'owe', 'payment', 'interest'];
       case 'goals':
@@ -231,7 +261,14 @@ class ChatbotService {
       case 'expenses':
         return ['expense', 'expenses', 'spending', 'cost', 'money out'];
       case 'income':
-        return ['income', 'money in', 'earnings', 'salary', 'wage', 'make money'];
+        return [
+          'income',
+          'money in',
+          'earnings',
+          'salary',
+          'wage',
+          'make money',
+        ];
       default:
         return [];
     }
@@ -256,40 +293,52 @@ Just ask me anything about money management, or use the quick replies below!""";
     if (category != null && _financialResponses.containsKey(category)) {
       final responses = _financialResponses[category]!;
       final baseResponse = responses[Random().nextInt(responses.length)];
-      
+
       // Add personalized context if available
       if (context.financialContext != null) {
-        return _personalizeResponse(baseResponse, category, context.financialContext!);
+        return _personalizeResponse(
+          baseResponse,
+          category,
+          context.financialContext!,
+        );
       }
-      
+
       return baseResponse;
     }
-    
+
     return "I'd be happy to help with your financial question! Could you be more specific about what you'd like to know?";
   }
 
-  String _personalizeResponse(String baseResponse, String category, FinancialContext financial) {
+  String _personalizeResponse(
+    String baseResponse,
+    String category,
+    FinancialContext financial,
+  ) {
     String personalized = baseResponse;
-    
+
     switch (category) {
       case 'budgeting':
         if (financial.monthlyIncome > 0) {
-          final disposableIncome = financial.monthlyIncome - financial.monthlyExpenses;
-          personalized += "\n\nBased on your current income of \$${financial.monthlyIncome.toStringAsFixed(0)}, you have about \$${disposableIncome.toStringAsFixed(0)} in disposable income to work with.";
+          final disposableIncome =
+              financial.monthlyIncome - financial.monthlyExpenses;
+          personalized +=
+              "\n\nBased on your current income of \$${financial.monthlyIncome.toStringAsFixed(0)}, you have about \$${disposableIncome.toStringAsFixed(0)} in disposable income to work with.";
         }
         break;
       case 'saving':
         if (financial.currentBalance > 0) {
-          personalized += "\n\nI see you currently have \$${financial.currentBalance.toStringAsFixed(0)}. Great start! Consider automating your savings to build this even more.";
+          personalized +=
+              "\n\nI see you currently have \$${financial.currentBalance.toStringAsFixed(0)}. Great start! Consider automating your savings to build this even more.";
         }
         break;
       case 'expenses':
         if (financial.monthlyExpenses > 0) {
-          personalized += "\n\nYour monthly expenses are around \$${financial.monthlyExpenses.toStringAsFixed(0)}. Let's see if we can optimize some categories!";
+          personalized +=
+              "\n\nYour monthly expenses are around \$${financial.monthlyExpenses.toStringAsFixed(0)}. Let's see if we can optimize some categories!";
         }
         break;
     }
-    
+
     return personalized;
   }
 
@@ -306,8 +355,10 @@ Once you have some data, I can provide detailed insights and suggestions for opt
     }
 
     final financial = context.financialContext!;
-    final savingsRate = financial.monthlyIncome > 0 
-        ? ((financial.monthlyIncome - financial.monthlyExpenses) / financial.monthlyIncome * 100)
+    final savingsRate = financial.monthlyIncome > 0
+        ? ((financial.monthlyIncome - financial.monthlyExpenses) /
+              financial.monthlyIncome *
+              100)
         : 0;
 
     return """📊 **Your Spending Analysis**
@@ -323,8 +374,10 @@ Want me to dive deeper into any specific category? I can help you optimize your 
   }
 
   String _generateSpendingInsights(FinancialContext financial) {
-    final savingsRate = financial.monthlyIncome > 0 
-        ? ((financial.monthlyIncome - financial.monthlyExpenses) / financial.monthlyIncome * 100)
+    final savingsRate = financial.monthlyIncome > 0
+        ? ((financial.monthlyIncome - financial.monthlyExpenses) /
+              financial.monthlyIncome *
+              100)
         : 0;
 
     if (savingsRate >= 20) {
@@ -402,7 +455,7 @@ What goal would you like to work on first? I can help you create a specific plan
       "Let me help you with that! What specific aspect of personal finance would you like to explore?",
       "I'm your personal finance assistant! I can help with budgeting, saving, investing, debt management, and more. What interests you most?",
     ];
-    
+
     return responses[Random().nextInt(responses.length)];
   }
 
@@ -410,21 +463,49 @@ What goal would you like to work on first? I can help you create a specific plan
     switch (category) {
       case 'budgeting':
         return [
-          QuickReply(id: 'b1', text: '📊 Create Budget', payload: 'create_budget'),
-          QuickReply(id: 'b2', text: '🎯 50/30/20 Rule', payload: 'budget_rule'),
+          QuickReply(
+            id: 'b1',
+            text: '📊 Create Budget',
+            payload: 'create_budget',
+          ),
+          QuickReply(
+            id: 'b2',
+            text: '🎯 50/30/20 Rule',
+            payload: 'budget_rule',
+          ),
           QuickReply(id: 'b3', text: '📱 Budget Apps', payload: 'budget_apps'),
         ];
       case 'saving':
         return [
-          QuickReply(id: 's1', text: '🚨 Emergency Fund', payload: 'emergency_fund'),
-          QuickReply(id: 's2', text: '🏦 High-Yield Accounts', payload: 'savings_accounts'),
-          QuickReply(id: 's3', text: '🎯 Savings Goals', payload: 'savings_goals'),
+          QuickReply(
+            id: 's1',
+            text: '🚨 Emergency Fund',
+            payload: 'emergency_fund',
+          ),
+          QuickReply(
+            id: 's2',
+            text: '🏦 High-Yield Accounts',
+            payload: 'savings_accounts',
+          ),
+          QuickReply(
+            id: 's3',
+            text: '🎯 Savings Goals',
+            payload: 'savings_goals',
+          ),
         ];
       case 'investing':
         return [
           QuickReply(id: 'i1', text: '📈 Index Funds', payload: 'index_funds'),
-          QuickReply(id: 'i2', text: '💰 Dollar-Cost Averaging', payload: 'dca'),
-          QuickReply(id: 'i3', text: '🎓 Student Investing', payload: 'student_investing'),
+          QuickReply(
+            id: 'i2',
+            text: '💰 Dollar-Cost Averaging',
+            payload: 'dca',
+          ),
+          QuickReply(
+            id: 'i3',
+            text: '🎓 Student Investing',
+            payload: 'student_investing',
+          ),
         ];
       default:
         return _defaultQuickReplies;
@@ -433,17 +514,37 @@ What goal would you like to work on first? I can help you create a specific plan
 
   List<QuickReply> _getBudgetQuickReplies() {
     return [
-      QuickReply(id: 'budget1', text: '📊 Create Budget', payload: 'create_budget'),
-      QuickReply(id: 'budget2', text: '🔍 Track Expenses', payload: 'track_expenses'),
-      QuickReply(id: 'budget3', text: '✂️ Cut Expenses', payload: 'cut_expenses'),
+      QuickReply(
+        id: 'budget1',
+        text: '📊 Create Budget',
+        payload: 'create_budget',
+      ),
+      QuickReply(
+        id: 'budget2',
+        text: '🔍 Track Expenses',
+        payload: 'track_expenses',
+      ),
+      QuickReply(
+        id: 'budget3',
+        text: '✂️ Cut Expenses',
+        payload: 'cut_expenses',
+      ),
       QuickReply(id: 'budget4', text: '📱 Budget Apps', payload: 'budget_apps'),
     ];
   }
 
   List<QuickReply> _getGoalQuickReplies() {
     return [
-      QuickReply(id: 'goal1', text: '🚨 Emergency Fund', payload: 'emergency_fund'),
-      QuickReply(id: 'goal2', text: '🎓 Graduation Trip', payload: 'graduation_trip'),
+      QuickReply(
+        id: 'goal1',
+        text: '🚨 Emergency Fund',
+        payload: 'emergency_fund',
+      ),
+      QuickReply(
+        id: 'goal2',
+        text: '🎓 Graduation Trip',
+        payload: 'graduation_trip',
+      ),
       QuickReply(id: 'goal3', text: '🚗 Car Fund', payload: 'car_fund'),
       QuickReply(id: 'goal4', text: '🏠 Moving Fund', payload: 'moving_fund'),
     ];
@@ -451,21 +552,29 @@ What goal would you like to work on first? I can help you create a specific plan
 
   List<QuickReply> _getContextualQuickReplies(ChatContext context) {
     // Return contextual quick replies based on user's financial situation
-    if (context.financialContext?.currentBalance != null && 
+    if (context.financialContext?.currentBalance != null &&
         context.financialContext!.currentBalance < 500) {
       return [
-        QuickReply(id: 'c1', text: '🚨 Build Emergency Fund', payload: 'emergency_fund'),
-        QuickReply(id: 'c2', text: '💰 Increase Income', payload: 'increase_income'),
+        QuickReply(
+          id: 'c1',
+          text: '🚨 Build Emergency Fund',
+          payload: 'emergency_fund',
+        ),
+        QuickReply(
+          id: 'c2',
+          text: '💰 Increase Income',
+          payload: 'increase_income',
+        ),
         QuickReply(id: 'c3', text: '✂️ Cut Expenses', payload: 'cut_expenses'),
       ];
     }
-    
+
     return _defaultQuickReplies;
   }
 
   ChatAttachment? _createSpendingChart(ChatContext context) {
     if (context.financialContext == null) return null;
-    
+
     return ChatAttachment(
       id: 'spending_chart_${DateTime.now().millisecondsSinceEpoch}',
       type: AttachmentType.chart,
@@ -490,36 +599,64 @@ What goal would you like to work on first? I can help you create a specific plan
     return [
       ChatMessage(
         id: '1',
-        content: "Hi! I'm new to managing money as a college student. Can you help me get started?",
+        content:
+            "Hi! I'm new to managing money as a college student. Can you help me get started?",
         type: MessageType.user,
         timestamp: now.subtract(const Duration(minutes: 10)),
       ),
       ChatMessage(
         id: '2',
-        content: "Absolutely! Welcome to your financial journey! 🎉 As a college student, you're already ahead by thinking about money management early. Let's start with the basics - do you currently have any income (part-time job, allowance, etc.) and are you tracking your expenses?",
+        content:
+            "Absolutely! Welcome to your financial journey! 🎉 As a college student, you're already ahead by thinking about money management early. Let's start with the basics - do you currently have any income (part-time job, allowance, etc.) and are you tracking your expenses?",
         type: MessageType.bot,
         timestamp: now.subtract(const Duration(minutes: 9)),
         quickReplies: [
-          QuickReply(id: 'q1', text: '💰 I have some income', payload: 'has_income'),
-          QuickReply(id: 'q2', text: '📊 Help me track expenses', payload: 'track_expenses'),
-          QuickReply(id: 'q3', text: '🎯 Set financial goals', payload: 'set_goals'),
+          QuickReply(
+            id: 'q1',
+            text: '💰 I have some income',
+            payload: 'has_income',
+          ),
+          QuickReply(
+            id: 'q2',
+            text: '📊 Help me track expenses',
+            payload: 'track_expenses',
+          ),
+          QuickReply(
+            id: 'q3',
+            text: '🎯 Set financial goals',
+            payload: 'set_goals',
+          ),
         ],
       ),
       ChatMessage(
         id: '3',
-        content: "I work part-time and get about \$800/month. I don't really track expenses though.",
+        content:
+            "I work part-time and get about \$800/month. I don't really track expenses though.",
         type: MessageType.user,
         timestamp: now.subtract(const Duration(minutes: 8)),
       ),
       ChatMessage(
         id: '4',
-        content: "Perfect! \$800/month is a great start. Here's my recommendation for you:\n\n**Step 1: Track for 1 week** 📱\nWrite down every expense, no matter how small\n\n**Step 2: Create a simple budget** 💰\n- \$400 for needs (food, transport, books)\n- \$240 for wants (entertainment, eating out)\n- \$160 for savings (20% is ideal!)\n\n**Step 3: Build an emergency fund** 🚨\nAim for \$500 first, then work toward \$1,000\n\nWant me to help you get started with any of these steps?",
+        content:
+            "Perfect! \$800/month is a great start. Here's my recommendation for you:\n\n**Step 1: Track for 1 week** 📱\nWrite down every expense, no matter how small\n\n**Step 2: Create a simple budget** 💰\n- \$400 for needs (food, transport, books)\n- \$240 for wants (entertainment, eating out)\n- \$160 for savings (20% is ideal!)\n\n**Step 3: Build an emergency fund** 🚨\nAim for \$500 first, then work toward \$1,000\n\nWant me to help you get started with any of these steps?",
         type: MessageType.bot,
         timestamp: now.subtract(const Duration(minutes: 7)),
         quickReplies: [
-          QuickReply(id: 'b1', text: '📊 Start tracking', payload: 'start_tracking'),
-          QuickReply(id: 'b2', text: '💰 Create budget', payload: 'create_budget'),
-          QuickReply(id: 'b3', text: '🏦 Emergency fund tips', payload: 'emergency_fund'),
+          QuickReply(
+            id: 'b1',
+            text: '📊 Start tracking',
+            payload: 'start_tracking',
+          ),
+          QuickReply(
+            id: 'b2',
+            text: '💰 Create budget',
+            payload: 'create_budget',
+          ),
+          QuickReply(
+            id: 'b3',
+            text: '🏦 Emergency fund tips',
+            payload: 'emergency_fund',
+          ),
         ],
       ),
     ];

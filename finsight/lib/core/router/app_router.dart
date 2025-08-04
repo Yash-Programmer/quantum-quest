@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../navigation/main_scaffold.dart';
 import '../../features/dashboard/presentation/pages/dashboard_page.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import '../../features/budgeting/presentation/pages/smart_budgeting_page.dart';
@@ -44,31 +44,37 @@ class AppRouter {
         name: 'onboarding',
         builder: (context, state) => const OnboardingPage(),
       ),
-      GoRoute(
-        path: dashboard,
-        name: 'dashboard',
-        builder: (context, state) => const DashboardPage(),
+      ShellRoute(
+        builder: (context, state, child) => MainScaffold(child: child),
+        routes: [
+          GoRoute(
+            path: dashboard,
+            name: 'dashboard',
+            builder: (context, state) => const DashboardPage(),
+          ),
+          GoRoute(
+            path: budgeting,
+            name: 'budgeting',
+            builder: (context, state) => const SmartBudgetingPage(),
+          ),
+          GoRoute(
+            path: predictive,
+            name: 'predictive',
+            builder: (context, state) => const PredictiveFinancePage(),
+          ),
+          GoRoute(
+            path: chatbot,
+            name: 'chatbot',
+            builder: (context, state) => const AIAssistantPage(),
+          ),
+          GoRoute(
+            path: knowledge,
+            name: 'knowledge',
+            builder: (context, state) => const KnowledgeHubPage(),
+          ),
+        ],
       ),
-      GoRoute(
-        path: budgeting,
-        name: 'budgeting',
-        builder: (context, state) => const SmartBudgetingPage(),
-      ),
-      GoRoute(
-        path: predictive,
-        name: 'predictive',
-        builder: (context, state) => const PredictiveFinancePage(),
-      ),
-      GoRoute(
-        path: chatbot,
-        name: 'chatbot',
-        builder: (context, state) => const AIAssistantPage(),
-      ),
-      GoRoute(
-        path: knowledge,
-        name: 'knowledge',
-        builder: (context, state) => const KnowledgeHubPage(),
-      ),
+      // Routes without bottom navigation
       GoRoute(
         path: goals,
         name: 'goals',

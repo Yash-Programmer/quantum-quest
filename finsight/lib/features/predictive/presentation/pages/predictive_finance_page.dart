@@ -12,7 +12,8 @@ class PredictiveFinancePage extends ConsumerStatefulWidget {
   const PredictiveFinancePage({super.key});
 
   @override
-  ConsumerState<PredictiveFinancePage> createState() => _PredictiveFinancePageState();
+  ConsumerState<PredictiveFinancePage> createState() =>
+      _PredictiveFinancePageState();
 }
 
 class _PredictiveFinancePageState extends ConsumerState<PredictiveFinancePage>
@@ -53,13 +54,19 @@ class _PredictiveFinancePageState extends ConsumerState<PredictiveFinancePage>
             onSelected: (value) {
               switch (value) {
                 case 'demo':
-                  ref.read(predictiveNotifierProvider.notifier).generateDemoData();
+                  ref
+                      .read(predictiveNotifierProvider.notifier)
+                      .generateDemoData();
                   break;
                 case 'clear':
-                  ref.read(predictiveNotifierProvider.notifier).clearPredictions();
+                  ref
+                      .read(predictiveNotifierProvider.notifier)
+                      .clearPredictions();
                   break;
                 case 'refresh':
-                  ref.read(predictiveNotifierProvider.notifier).loadPredictiveData();
+                  ref
+                      .read(predictiveNotifierProvider.notifier)
+                      .loadPredictiveData();
                   break;
               }
             },
@@ -110,16 +117,16 @@ class _PredictiveFinancePageState extends ConsumerState<PredictiveFinancePage>
       body: predictiveState.isLoading
           ? const Center(child: CircularProgressIndicator())
           : predictiveState.error != null
-              ? _buildErrorState(predictiveState.error!)
-              : TabBarView(
-                  controller: _tabController,
-                  children: [
-                    _buildOverviewTab(predictions, insights),
-                    _buildForecastsTab(predictions),
-                    _buildTrendsTab(),
-                    _buildInsightsTab(insights),
-                  ],
-                ),
+          ? _buildErrorState(predictiveState.error!)
+          : TabBarView(
+              controller: _tabController,
+              children: [
+                _buildOverviewTab(predictions, insights),
+                _buildForecastsTab(predictions),
+                _buildTrendsTab(),
+                _buildInsightsTab(insights),
+              ],
+            ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _showPredictionDialog(context),
         icon: const Icon(Icons.auto_awesome),
@@ -128,9 +135,12 @@ class _PredictiveFinancePageState extends ConsumerState<PredictiveFinancePage>
     );
   }
 
-  Widget _buildOverviewTab(List<Prediction> predictions, List<PredictiveInsight> insights) {
+  Widget _buildOverviewTab(
+    List<Prediction> predictions,
+    List<PredictiveInsight> insights,
+  ) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -141,23 +151,27 @@ class _PredictiveFinancePageState extends ConsumerState<PredictiveFinancePage>
           if (predictions.isNotEmpty) ...[
             Text(
               'Recent Predictions',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
-            ...predictions.take(3).map((prediction) => Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: PredictionCard(prediction: prediction),
-            )),
+            ...predictions
+                .take(3)
+                .map(
+                  (prediction) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: PredictionCard(prediction: prediction),
+                  ),
+                ),
           ],
           const SizedBox(height: 20),
           if (insights.isNotEmpty) ...[
             Text(
               'Key Insights',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             InsightsSection(insights: insights.take(2).toList()),
@@ -176,48 +190,52 @@ class _PredictiveFinancePageState extends ConsumerState<PredictiveFinancePage>
         .toList();
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (spendingPredictions.isNotEmpty) ...[
             Text(
               'Spending Forecasts',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
-            ...spendingPredictions.map((prediction) => Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: Column(
-                children: [
-                  PredictionCard(prediction: prediction),
-                  const SizedBox(height: 8),
-                  ForecastChart(prediction: prediction),
-                ],
+            ...spendingPredictions.map(
+              (prediction) => Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: Column(
+                  children: [
+                    PredictionCard(prediction: prediction),
+                    const SizedBox(height: 8),
+                    ForecastChart(prediction: prediction),
+                  ],
+                ),
               ),
-            )),
+            ),
             const SizedBox(height: 20),
           ],
           if (cashFlowPredictions.isNotEmpty) ...[
             Text(
               'Cash Flow Forecasts',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
-            ...cashFlowPredictions.map((prediction) => Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: Column(
-                children: [
-                  PredictionCard(prediction: prediction),
-                  const SizedBox(height: 8),
-                  ForecastChart(prediction: prediction),
-                ],
+            ...cashFlowPredictions.map(
+              (prediction) => Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: Column(
+                  children: [
+                    PredictionCard(prediction: prediction),
+                    const SizedBox(height: 8),
+                    ForecastChart(prediction: prediction),
+                  ],
+                ),
               ),
-            )),
+            ),
           ],
           if (predictions.isEmpty) _buildEmptyState('No forecasts available'),
         ],
@@ -229,22 +247,24 @@ class _PredictiveFinancePageState extends ConsumerState<PredictiveFinancePage>
     final trends = ref.watch(predictiveNotifierProvider).trends;
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Financial Trends Analysis',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
           if (trends.isNotEmpty) ...[
-            ...trends.map((trend) => Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: TrendAnalysisCard(trend: trend),
-            )),
+            ...trends.map(
+              (trend) => Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: TrendAnalysisCard(trend: trend),
+              ),
+            ),
           ] else
             _buildEmptyState('No trend data available'),
         ],
@@ -254,15 +274,15 @@ class _PredictiveFinancePageState extends ConsumerState<PredictiveFinancePage>
 
   Widget _buildInsightsTab(List<PredictiveInsight> insights) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'AI-Powered Insights',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
           if (insights.isNotEmpty) ...[
@@ -329,8 +349,10 @@ class _PredictiveFinancePageState extends ConsumerState<PredictiveFinancePage>
                   child: _buildStatItem(
                     'Next Spending',
                     spendingPredictions.isNotEmpty
-                        ? NumberFormat.currency(symbol: '\$', decimalDigits: 0)
-                            .format(spendingPredictions.first.predictedValue)
+                        ? NumberFormat.currency(
+                            symbol: '\$',
+                            decimalDigits: 0,
+                          ).format(spendingPredictions.first.predictedValue)
                         : '\$0',
                     Icons.payment,
                     Colors.orange,
@@ -340,11 +362,14 @@ class _PredictiveFinancePageState extends ConsumerState<PredictiveFinancePage>
                   child: _buildStatItem(
                     'Cash Flow',
                     cashFlowPredictions.isNotEmpty
-                        ? NumberFormat.currency(symbol: '\$', decimalDigits: 0)
-                            .format(cashFlowPredictions.first.predictedValue)
+                        ? NumberFormat.currency(
+                            symbol: '\$',
+                            decimalDigits: 0,
+                          ).format(cashFlowPredictions.first.predictedValue)
                         : '\$0',
                     Icons.account_balance_wallet,
-                    cashFlowPredictions.isNotEmpty && cashFlowPredictions.first.predictedValue < 0
+                    cashFlowPredictions.isNotEmpty &&
+                            cashFlowPredictions.first.predictedValue < 0
                         ? Colors.red
                         : Colors.green,
                   ),
@@ -357,7 +382,12 @@ class _PredictiveFinancePageState extends ConsumerState<PredictiveFinancePage>
     );
   }
 
-  Widget _buildStatItem(String label, String value, IconData icon, Color color) {
+  Widget _buildStatItem(
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Column(
       children: [
         Icon(icon, color: color, size: 24),
@@ -389,9 +419,9 @@ class _PredictiveFinancePageState extends ConsumerState<PredictiveFinancePage>
           children: [
             Text(
               'Prediction Timeframe',
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             Wrap(
@@ -480,7 +510,9 @@ class _PredictiveFinancePageState extends ConsumerState<PredictiveFinancePage>
           const SizedBox(height: 24),
           ElevatedButton.icon(
             onPressed: () {
-              ref.read(predictiveNotifierProvider.notifier).loadPredictiveData();
+              ref
+                  .read(predictiveNotifierProvider.notifier)
+                  .loadPredictiveData();
             },
             icon: const Icon(Icons.refresh),
             label: const Text('Retry'),
@@ -495,7 +527,9 @@ class _PredictiveFinancePageState extends ConsumerState<PredictiveFinancePage>
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Create New Prediction'),
-        content: const Text('What type of prediction would you like to create?'),
+        content: const Text(
+          'What type of prediction would you like to create?',
+        ),
         actions: [
           TextButton(
             onPressed: () {

@@ -4,11 +4,8 @@ import '../../../../core/theme/app_theme.dart';
 
 class BudgetSummaryCard extends StatelessWidget {
   final Map<String, double> summary;
-  
-  const BudgetSummaryCard({
-    Key? key,
-    required this.summary,
-  }) : super(key: key);
+
+  const BudgetSummaryCard({super.key, required this.summary});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +31,7 @@ class BudgetSummaryCard extends StatelessWidget {
             end: Alignment.bottomRight,
             colors: [
               AppTheme.primaryColor,
-              AppTheme.primaryColor.withOpacity(0.8),
+              AppTheme.primaryColor.withValues(alpha: 0.8),
             ],
           ),
         ),
@@ -54,13 +51,13 @@ class BudgetSummaryCard extends StatelessWidget {
                 ),
                 Icon(
                   Icons.account_balance_wallet,
-                  color: Colors.white.withOpacity(0.9),
+                  color: Colors.white.withValues(alpha: 0.9),
                   size: 28,
                 ),
               ],
             ),
             const SizedBox(height: 20),
-            
+
             // Progress Circle
             Center(
               child: Stack(
@@ -72,13 +69,13 @@ class BudgetSummaryCard extends StatelessWidget {
                     child: CircularProgressIndicator(
                       value: utilizationPercentage / 100,
                       strokeWidth: 8,
-                      backgroundColor: Colors.white.withOpacity(0.3),
+                      backgroundColor: Colors.white.withValues(alpha: 0.3),
                       valueColor: AlwaysStoppedAnimation<Color>(
                         utilizationPercentage > 100
                             ? AppTheme.errorColor
                             : utilizationPercentage > 80
-                                ? AppTheme.warningColor
-                                : Colors.white,
+                            ? AppTheme.warningColor
+                            : Colors.white,
                       ),
                     ),
                   ),
@@ -95,10 +92,7 @@ class BudgetSummaryCard extends StatelessWidget {
                       ),
                       const Text(
                         'Used',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                        ),
+                        style: TextStyle(color: Colors.white, fontSize: 14),
                       ),
                     ],
                   ),
@@ -106,7 +100,7 @@ class BudgetSummaryCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            
+
             // Summary Stats
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -129,12 +123,12 @@ class BudgetSummaryCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            
+
             // Status message
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -143,8 +137,8 @@ class BudgetSummaryCard extends StatelessWidget {
                     utilizationPercentage > 100
                         ? Icons.warning
                         : utilizationPercentage > 80
-                            ? Icons.info
-                            : Icons.check_circle,
+                        ? Icons.info
+                        : Icons.check_circle,
                     color: Colors.white,
                     size: 20,
                   ),
@@ -152,10 +146,7 @@ class BudgetSummaryCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       _getStatusMessage(utilizationPercentage),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                      ),
+                      style: const TextStyle(color: Colors.white, fontSize: 14),
                     ),
                   ),
                 ],
@@ -170,18 +161,11 @@ class BudgetSummaryCard extends StatelessWidget {
   Widget _buildSummaryItem(String label, String value, IconData icon) {
     return Column(
       children: [
-        Icon(
-          icon,
-          color: Colors.white.withOpacity(0.9),
-          size: 24,
-        ),
+        Icon(icon, color: Colors.white.withValues(alpha: 0.9), size: 24),
         const SizedBox(height: 4),
         Text(
           label,
-          style: TextStyle(
-            color: Colors.white.withOpacity(0.9),
-            fontSize: 12,
-          ),
+          style: TextStyle(color: Colors.white.withValues(alpha: 0.9), fontSize: 12),
         ),
         const SizedBox(height: 2),
         Text(

@@ -41,11 +41,7 @@ class _AIAssistantPageState extends ConsumerState<AIAssistantPage> {
             CircleAvatar(
               backgroundColor: Colors.blue,
               radius: 16,
-              child: Icon(
-                Icons.smart_toy,
-                color: Colors.white,
-                size: 18,
-              ),
+              child: Icon(Icons.smart_toy, color: Colors.white, size: 18),
             ),
             SizedBox(width: 12),
             Column(
@@ -55,11 +51,17 @@ class _AIAssistantPageState extends ConsumerState<AIAssistantPage> {
                   children: [
                     Text(
                       'FinSight Assistant',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(width: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
                       decoration: BoxDecoration(
                         color: isGeminiAvailable ? Colors.green : Colors.orange,
                         borderRadius: BorderRadius.circular(8),
@@ -77,7 +79,10 @@ class _AIAssistantPageState extends ConsumerState<AIAssistantPage> {
                 ),
                 Text(
                   isGeminiAvailable ? 'Powered by Gemini AI' : 'Offline Mode',
-                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.normal,
+                  ),
                 ),
               ],
             ),
@@ -94,7 +99,9 @@ class _AIAssistantPageState extends ConsumerState<AIAssistantPage> {
                   ref.read(geminiChatNotifierProvider.notifier).clearChat();
                   break;
                 case 'demo':
-                  ref.read(geminiChatNotifierProvider.notifier).testGeminiConnection();
+                  ref
+                      .read(geminiChatNotifierProvider.notifier)
+                      .testGeminiConnection();
                   break;
                 case 'clear':
                   _showClearDialog();
@@ -139,15 +146,13 @@ class _AIAssistantPageState extends ConsumerState<AIAssistantPage> {
       body: chatState.isLoading
           ? const Center(child: CircularProgressIndicator())
           : error != null
-              ? _buildErrorState(error)
-              : Column(
-                  children: [
-                    Expanded(
-                      child: _buildChatArea(messages, isTyping),
-                    ),
-                    _buildInputArea(),
-                  ],
-                ),
+          ? _buildErrorState(error)
+          : Column(
+              children: [
+                Expanded(child: _buildChatArea(messages, isTyping)),
+                _buildInputArea(),
+              ],
+            ),
     );
   }
 
@@ -170,11 +175,15 @@ class _AIAssistantPageState extends ConsumerState<AIAssistantPage> {
         return Column(
           children: [
             ChatBubble(message: message),
-            if (message.quickReplies != null && message.quickReplies!.isNotEmpty && isLastMessage)
+            if (message.quickReplies != null &&
+                message.quickReplies!.isNotEmpty &&
+                isLastMessage)
               QuickRepliesSection(
                 quickReplies: message.quickReplies!,
                 onQuickReplyTap: (quickReply) {
-                  ref.read(geminiChatNotifierProvider.notifier).handleQuickReply(quickReply);
+                  ref
+                      .read(geminiChatNotifierProvider.notifier)
+                      .handleQuickReply(quickReply);
                   _scrollToBottom();
                 },
               ),
@@ -192,7 +201,7 @@ class _AIAssistantPageState extends ConsumerState<AIAssistantPage> {
         color: Theme.of(context).colorScheme.surface,
         border: Border(
           top: BorderSide(
-            color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
             width: 1,
           ),
         ),
@@ -232,14 +241,16 @@ class _AIAssistantPageState extends ConsumerState<AIAssistantPage> {
             Text(
               error,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
               ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
             ElevatedButton.icon(
               onPressed: () {
-                ref.read(geminiChatNotifierProvider.notifier).refreshGeminiStatus();
+                ref
+                    .read(geminiChatNotifierProvider.notifier)
+                    .refreshGeminiStatus();
               },
               icon: const Icon(Icons.refresh),
               label: const Text('Try Again'),
@@ -267,7 +278,9 @@ class _AIAssistantPageState extends ConsumerState<AIAssistantPage> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Clear Chat'),
-        content: const Text('Are you sure you want to clear all messages? This action cannot be undone.'),
+        content: const Text(
+          'Are you sure you want to clear all messages? This action cannot be undone.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),

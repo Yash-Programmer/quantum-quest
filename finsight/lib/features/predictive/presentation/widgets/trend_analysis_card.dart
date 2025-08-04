@@ -4,10 +4,7 @@ import '../../domain/models/prediction.dart';
 class TrendAnalysisCard extends StatelessWidget {
   final FinancialTrend trend;
 
-  const TrendAnalysisCard({
-    super.key,
-    required this.trend,
-  });
+  const TrendAnalysisCard({super.key, required this.trend});
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +34,14 @@ class TrendAnalysisCard extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
-                    color: _getTrendColor(trend.direction).withOpacity(0.1),
+                    color: _getTrendColor(
+                      trend.direction,
+                    ).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                       color: _getTrendColor(trend.direction),
@@ -60,19 +62,15 @@ class TrendAnalysisCard extends StatelessWidget {
             Text(
               trend.description,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.7),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),
             ),
             const SizedBox(height: 16),
             Row(
               children: [
-                Expanded(
-                  child: _buildChangeIndicator(context),
-                ),
+                Expanded(child: _buildChangeIndicator(context)),
                 const SizedBox(width: 16),
-                Expanded(
-                  child: _buildSignificanceIndicator(context),
-                ),
+                Expanded(child: _buildSignificanceIndicator(context)),
               ],
             ),
             if (trend.factors.isNotEmpty) ...[
@@ -84,27 +82,35 @@ class TrendAnalysisCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              ...trend.factors.take(3).map((factor) => Padding(
-                padding: const EdgeInsets.only(bottom: 4),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.circle,
-                      size: 6,
-                      color: theme.colorScheme.onSurface.withOpacity(0.6),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        factor,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withOpacity(0.7),
-                        ),
+              ...trend.factors
+                  .take(3)
+                  .map(
+                    (factor) => Padding(
+                      padding: const EdgeInsets.only(bottom: 4),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.circle,
+                            size: 6,
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.6,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              factor,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.7,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              )),
+                  ),
             ],
           ],
         ),
@@ -123,7 +129,7 @@ class TrendAnalysisCard extends StatelessWidget {
         Text(
           'Change',
           style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurface.withOpacity(0.6),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
           ),
         ),
         const SizedBox(height: 4),
@@ -157,13 +163,13 @@ class TrendAnalysisCard extends StatelessWidget {
         Text(
           'Significance',
           style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurface.withOpacity(0.6),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
           ),
         ),
         const SizedBox(height: 4),
         LinearProgressIndicator(
           value: trend.significance,
-          backgroundColor: theme.colorScheme.surfaceVariant,
+          backgroundColor: theme.colorScheme.surfaceContainerHighest,
           valueColor: AlwaysStoppedAnimation<Color>(
             _getSignificanceColor(trend.significance),
           ),

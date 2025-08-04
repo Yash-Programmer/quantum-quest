@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_theme.dart';
@@ -10,41 +9,11 @@ import '../widgets/quick_summary_tiles.dart';
 import '../widgets/recent_activity_timeline.dart';
 import '../widgets/quick_actions_row.dart';
 
-class DashboardPage extends ConsumerStatefulWidget {
-  const DashboardPage({Key? key}) : super(key: key);
+class DashboardPage extends ConsumerWidget {
+  const DashboardPage({super.key});
 
   @override
-  ConsumerState<DashboardPage> createState() => _DashboardPageState();
-}
-
-class _DashboardPageState extends ConsumerState<DashboardPage> {
-  int _selectedIndex = 0;
-
-  final List<BottomNavigationBarItem> _navItems = [
-    const BottomNavigationBarItem(
-      icon: Icon(Icons.dashboard),
-      label: 'Dashboard',
-    ),
-    const BottomNavigationBarItem(
-      icon: Icon(Icons.account_balance_wallet),
-      label: 'Budget',
-    ),
-    const BottomNavigationBarItem(
-      icon: Icon(Icons.trending_up),
-      label: 'Predictive',
-    ),
-    const BottomNavigationBarItem(
-      icon: Icon(Icons.smart_toy),
-      label: 'AI Chat',
-    ),
-    const BottomNavigationBarItem(
-      icon: Icon(Icons.school),
-      label: 'Knowledge',
-    ),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -79,97 +48,53 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
           ),
         ],
       ),
-      body: SafeArea(
-        child: IndexedStack(
-          index: _selectedIndex,
-          children: [
-            _buildDashboardTab(),
-            _buildBudgetingTab(),
-            _buildPredictiveTab(),
-            _buildChatbotTab(),
-            _buildKnowledgeTab(),
-          ],
-        ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _selectedIndex,
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-          
-          // Navigate to different routes based on index
-          switch (index) {
-            case 0:
-              // Stay on dashboard
-              break;
-            case 1:
-              context.go(AppRouter.budgeting);
-              break;
-            case 2:
-              context.go(AppRouter.predictive);
-              break;
-            case 3:
-              context.go(AppRouter.chatbot);
-              break;
-            case 4:
-              context.go(AppRouter.knowledge);
-              break;
-          }
+      body: RefreshIndicator(
+        onRefresh: () async {
+          // Refresh dashboard data
+          await Future.delayed(const Duration(seconds: 1));
         },
-        items: _navItems,
-      ),
-    );
-  }
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Greeting Section
+              _buildGreetingSection(context),
+              const SizedBox(height: 24),
 
-  Widget _buildDashboardTab() {
-    return RefreshIndicator(
-      onRefresh: () async {
-        // Refresh dashboard data
-        await Future.delayed(const Duration(seconds: 1));
-      },
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 100), // Extra bottom padding to prevent overflow
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Greeting Section
-            _buildGreetingSection(),
-            const SizedBox(height: 24),
-            
-            // Financial Health Score
-            const FinancialHealthScore(),
-            const SizedBox(height: 24),
-            
-            // Quick Summary Tiles
-            const QuickSummaryTiles(),
-            const SizedBox(height: 24),
-            
-            // Recent Activity Timeline
-            const RecentActivityTimeline(),
-            const SizedBox(height: 24),
-            
-            // Quick Actions
-            const QuickActionsRow(),
-            const SizedBox(height: 24),
-            
-            // AI Tip Card
-            _buildAITipCard(),
-            
-            // Extra bottom space to prevent overflow with bottom navigation
-            const SizedBox(height: 50),
-          ],
+              // Financial Health Score
+              const FinancialHealthScore(),
+              const SizedBox(height: 24),
+
+              // Quick Summary Tiles
+              const QuickSummaryTiles(),
+              const SizedBox(height: 24),
+
+              // Recent Activity Timeline
+              const RecentActivityTimeline(),
+              const SizedBox(height: 24),
+
+              // Quick Actions
+              const QuickActionsRow(),
+              const SizedBox(height: 24),
+
+              // AI Tip Card
+              _buildAITipCard(
+                context,
+              ), // Bottom padding for better scrolling experience
+              const SizedBox(height: 100),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildGreetingSection() {
+  Widget _buildGreetingSection(BuildContext context) {
     final hour = DateTime.now().hour;
     String greeting = 'Good morning';
     String emoji = '🌅';
-    
+
     if (hour >= 12 && hour < 17) {
       greeting = 'Good afternoon';
       emoji = '☀️';
@@ -180,7 +105,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
 
     return Card(
       elevation: 0,
-      color: AppTheme.primaryColor.withOpacity(0.1),
+      color: AppTheme.primaryColor.withValues(alpha: 0.1),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
@@ -188,11 +113,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
             CircleAvatar(
               radius: 24,
               backgroundColor: AppTheme.primaryColor,
-              child: const Icon(
-                Icons.person,
-                color: Colors.white,
-                size: 24,
-              ),
+              child: const Icon(Icons.person, color: Colors.white, size: 24),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -218,7 +139,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
     );
   }
 
-  Widget _buildAITipCard() {
+  Widget _buildAITipCard(BuildContext context) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -258,46 +179,6 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildBudgetingTab() {
-    return const Center(
-      child: Text(
-        'Smart Budgeting\nComing Soon!',
-        textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-      ),
-    );
-  }
-
-  Widget _buildPredictiveTab() {
-    return const Center(
-      child: Text(
-        'Predictive Finance\nComing Soon!',
-        textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-      ),
-    );
-  }
-
-  Widget _buildChatbotTab() {
-    return const Center(
-      child: Text(
-        'AI Assistant\nComing Soon!',
-        textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-      ),
-    );
-  }
-
-  Widget _buildKnowledgeTab() {
-    return const Center(
-      child: Text(
-        'Knowledge Hub\nComing Soon!',
-        textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
       ),
     );
   }

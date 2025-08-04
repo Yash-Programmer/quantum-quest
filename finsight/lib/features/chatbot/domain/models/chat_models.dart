@@ -78,20 +78,9 @@ class ChatMessage {
   }
 }
 
-enum MessageType {
-  user,
-  bot,
-  system,
-  typing,
-}
+enum MessageType { user, bot, system, typing }
 
-enum MessageStatus {
-  sending,
-  sent,
-  delivered,
-  read,
-  failed,
-}
+enum MessageStatus { sending, sent, delivered, read, failed }
 
 class QuickReply {
   final String id;
@@ -99,20 +88,10 @@ class QuickReply {
   final String? payload;
   final String? icon;
 
-  QuickReply({
-    required this.id,
-    required this.text,
-    this.payload,
-    this.icon,
-  });
+  QuickReply({required this.id, required this.text, this.payload, this.icon});
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'text': text,
-      'payload': payload,
-      'icon': icon,
-    };
+    return {'id': id, 'text': text, 'payload': payload, 'icon': icon};
   }
 
   factory QuickReply.fromJson(Map<String, dynamic> json) {
@@ -165,13 +144,7 @@ class ChatAttachment {
   }
 }
 
-enum AttachmentType {
-  image,
-  chart,
-  document,
-  link,
-  audio,
-}
+enum AttachmentType { image, chart, document, link, audio }
 
 class ChatSession {
   final String id;

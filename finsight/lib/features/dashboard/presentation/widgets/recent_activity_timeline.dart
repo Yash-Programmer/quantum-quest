@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import '../../../../core/theme/app_theme.dart';
 
 class RecentActivityTimeline extends StatelessWidget {
-  const RecentActivityTimeline({Key? key}) : super(key: key);
+  const RecentActivityTimeline({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -60,15 +60,17 @@ class RecentActivityTimeline extends StatelessWidget {
           children: [
             Text(
               'Recent Activity',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             TextButton(
               onPressed: () {
                 // Navigate to full activity log
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('View All Activity - Coming Soon!')),
+                  const SnackBar(
+                    content: Text('View All Activity - Coming Soon!'),
+                  ),
                 );
               },
               child: const Text('View All'),
@@ -112,14 +114,14 @@ class RecentActivityTimeline extends StatelessWidget {
   }) {
     final timeFormat = DateFormat('HH:mm');
     final dateFormat = DateFormat('MMM dd');
-    
+
     final now = DateTime.now();
-    final isToday = time.day == now.day && 
-                   time.month == now.month && 
-                   time.year == now.year;
-    final isYesterday = time.day == now.day - 1 && 
-                       time.month == now.month && 
-                       time.year == now.year;
+    final isToday =
+        time.day == now.day && time.month == now.month && time.year == now.year;
+    final isYesterday =
+        time.day == now.day - 1 &&
+        time.month == now.month &&
+        time.year == now.year;
 
     String timeString;
     if (isToday) {
@@ -135,14 +137,10 @@ class RecentActivityTimeline extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Icon(
-            icon,
-            color: color,
-            size: 20,
-          ),
+          child: Icon(icon, color: color, size: 20),
         ),
         const SizedBox(width: 16),
         Expanded(
@@ -151,20 +149,14 @@ class RecentActivityTimeline extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 2),
-              Text(
-                subtitle,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
+              Text(subtitle, style: Theme.of(context).textTheme.bodyMedium),
               const SizedBox(height: 2),
-              Text(
-                timeString,
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
+              Text(timeString, style: Theme.of(context).textTheme.bodySmall),
             ],
           ),
         ),
@@ -172,9 +164,9 @@ class RecentActivityTimeline extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: amount > 0 
-                  ? AppTheme.successColor.withOpacity(0.1)
-                  : AppTheme.errorColor.withOpacity(0.1),
+              color: amount > 0
+                  ? AppTheme.successColor.withValues(alpha: 0.1)
+                  : AppTheme.errorColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(

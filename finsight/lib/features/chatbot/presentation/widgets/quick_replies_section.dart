@@ -21,7 +21,7 @@ class QuickRepliesSection extends StatelessWidget {
           Text(
             'Quick replies:',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -62,10 +62,10 @@ class QuickReplyChip extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+          color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: theme.colorScheme.primary.withOpacity(0.3),
+            color: theme.colorScheme.primary.withValues(alpha: 0.3),
             width: 1,
           ),
         ),
@@ -93,7 +93,7 @@ class QuickReplyChip extends StatelessWidget {
 
   Widget _getQuickReplyIcon(String iconName, ThemeData theme) {
     IconData icon;
-    
+
     switch (iconName) {
       case 'money':
         icon = Icons.attach_money;
@@ -117,10 +117,6 @@ class QuickReplyChip extends StatelessWidget {
         icon = Icons.chat_bubble_outline;
     }
 
-    return Icon(
-      icon,
-      size: 14,
-      color: theme.colorScheme.primary,
-    );
+    return Icon(icon, size: 14, color: theme.colorScheme.primary);
   }
 }

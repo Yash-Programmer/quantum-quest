@@ -4,18 +4,19 @@ import '../../domain/models/prediction.dart';
 class InsightsSection extends StatelessWidget {
   final List<PredictiveInsight> insights;
 
-  const InsightsSection({
-    super.key,
-    required this.insights,
-  });
+  const InsightsSection({super.key, required this.insights});
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: insights.map((insight) => Padding(
-        padding: const EdgeInsets.only(bottom: 12),
-        child: InsightCard(insight: insight),
-      )).toList(),
+      children: insights
+          .map(
+            (insight) => Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: InsightCard(insight: insight),
+            ),
+          )
+          .toList(),
     );
   }
 }
@@ -23,10 +24,7 @@ class InsightsSection extends StatelessWidget {
 class InsightCard extends StatelessWidget {
   final PredictiveInsight insight;
 
-  const InsightCard({
-    super.key,
-    required this.insight,
-  });
+  const InsightCard({super.key, required this.insight});
 
   @override
   Widget build(BuildContext context) {
@@ -57,9 +55,12 @@ class InsightCard extends StatelessWidget {
                 ),
                 if (insight.isActionable)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
-                      color: Colors.blue.withOpacity(0.1),
+                      color: Colors.blue.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(color: Colors.blue, width: 1),
                     ),
@@ -77,19 +78,15 @@ class InsightCard extends StatelessWidget {
             Text(
               insight.description,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.7),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),
             ),
             const SizedBox(height: 16),
             Row(
               children: [
-                Expanded(
-                  child: _buildImpactIndicator(context),
-                ),
+                Expanded(child: _buildImpactIndicator(context)),
                 const SizedBox(width: 16),
-                Expanded(
-                  child: _buildInsightType(context),
-                ),
+                Expanded(child: _buildInsightType(context)),
               ],
             ),
             if (insight.recommendations.isNotEmpty) ...[
@@ -101,28 +98,34 @@ class InsightCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              ...insight.recommendations.take(3).map((recommendation) => Padding(
-                padding: const EdgeInsets.only(bottom: 6),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(
-                      Icons.lightbulb_outline,
-                      size: 16,
-                      color: Colors.amber,
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        recommendation,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withOpacity(0.8),
-                        ),
+              ...insight.recommendations
+                  .take(3)
+                  .map(
+                    (recommendation) => Padding(
+                      padding: const EdgeInsets.only(bottom: 6),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.lightbulb_outline,
+                            size: 16,
+                            color: Colors.amber,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              recommendation,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.8,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              )),
+                  ),
               if (insight.isActionable) ...[
                 const SizedBox(height: 12),
                 SizedBox(
@@ -154,13 +157,13 @@ class InsightCard extends StatelessWidget {
         Text(
           'Impact Level',
           style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurface.withOpacity(0.6),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
           ),
         ),
         const SizedBox(height: 4),
         LinearProgressIndicator(
           value: insight.impact,
-          backgroundColor: theme.colorScheme.surfaceVariant,
+          backgroundColor: theme.colorScheme.surfaceContainerHighest,
           valueColor: AlwaysStoppedAnimation<Color>(
             _getImpactColor(insight.impact),
           ),
@@ -186,19 +189,16 @@ class InsightCard extends StatelessWidget {
         Text(
           'Type',
           style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurface.withOpacity(0.6),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
           ),
         ),
         const SizedBox(height: 4),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            color: _getInsightColor(insight.type).withOpacity(0.1),
+            color: _getInsightColor(insight.type).withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: _getInsightColor(insight.type),
-              width: 1,
-            ),
+            border: Border.all(color: _getInsightColor(insight.type), width: 1),
           ),
           child: Text(
             insight.type.displayName,
@@ -267,21 +267,27 @@ class InsightCard extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               'Available Actions:',
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            ...insight.recommendations.map((rec) => Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Row(
-                children: [
-                  Icon(Icons.check_circle_outline, size: 16, color: Colors.green),
-                  const SizedBox(width: 8),
-                  Expanded(child: Text(rec)),
-                ],
+            ...insight.recommendations.map(
+              (rec) => Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.check_circle_outline,
+                      size: 16,
+                      color: Colors.green,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(child: Text(rec)),
+                  ],
+                ),
               ),
-            )),
+            ),
           ],
         ),
         actions: [
